@@ -1,0 +1,124 @@
+{
+    "models": [
+        {
+            "name": "Cat",
+            "controller": true,
+            "business": true,
+            "repository": true,
+            "class": true,
+            "falt": false,
+            "properties": [
+                {
+                    "name": "name",
+                    "type": "string",
+                    "required": true
+                },
+                {
+                    "name": "height",
+                    "type": "number",
+                    "required": false
+                }, 
+                {
+                    "name": "weight",
+                    "type": "number",
+                    "required": false
+                }, 
+                {
+                    "name": "age",
+                    "type": "number",
+                    "required": false
+                }
+            ],
+            "methods": [
+                {
+                    "name": "eat",
+                    "accesor": "private",
+                    "type": "boolean",
+                    "arguments": [
+                        {
+                            "name": "food",
+                            "type": "Array<string>"
+                        },
+                        {
+                            "name": "time",
+                            "type": "Date" 
+                        }
+                    ]
+                },
+                {
+                    "name": "sleep",
+                    "accesor": "public",
+                    "type": "void",
+                    "arguments": [
+                        {
+                            "name": "dream",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Dog",
+            "controller": true,
+            "business": true,
+            "repository": true,
+            "class": true,
+            "flat": false,
+            "properties": [
+                {
+                    "name": "name",
+                    "type": "string",
+                    "required": true
+                },
+                {
+                    "name": "height",
+                    "type": "number",
+                    "required": false
+                }, 
+                {
+                    "name": "weight",
+                    "type": "number",
+                    "required": false
+                }, 
+                {
+                    "name": "age",
+                    "type": "number",
+                    "required": false
+                }
+            ],
+            "methods": [
+                {
+                    "name": "eat",
+                    "accesor": "private",
+                    "type": "boolean",
+                    "arguments": [
+                        {
+                            "name": "food",
+                            "type": "Array<string>"
+                        },
+                        {
+                            "name": "time",
+                            "type": "Date" 
+                        }
+                    ]
+                },
+                {
+                    "name": "sleep",
+                    "accesor": "public",
+                    "type": "void",
+                    "arguments": [
+                        {
+                            "name": "dream",
+                            "type": "string"
+                        },
+                        {
+                            "name": "time",
+                            "type": "Date"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
