@@ -4,9 +4,6 @@
             "name": "Cat",
             "interface": true,
             "class": true,
-            "controller": true,
-            "business": true,
-            "repository": true,
             "falt": false,
             "properties": [
                 {
@@ -63,15 +60,30 @@
                     ]
                 }
             ],
-            "externalRefs": ["Person"]
+            "externalRefs": ["Person"],
+            "controller": {
+                "include": true,
+                "properties": [],
+                "methods": [],
+                "externalRefs": []
+            },
+            "business": {
+                "include": true,
+                "properties": [],
+                "methods": [],
+                "externalRefs": []
+            },
+            "repository": {
+                "include": true,
+                "properties": [],
+                "methods": [],
+                "externalRefs": []
+            }
         },
         {
             "name": "Dog",
             "interface": true,
             "class": true,
-            "controller": true,
-            "business": true,
-            "repository": true,
             "flat": false,
             "properties": [
                 {
@@ -127,15 +139,30 @@
                     ]
                 }
             ],
-            "externalRefs": []
+            "externalRefs": [],
+            "controller": {
+                "include": true,
+                "properties": [],
+                "methods": [],
+                "externalRefs": []
+            },
+            "business": {
+                "include": true,
+                "properties": [],
+                "methods": [],
+                "externalRefs": []
+            },
+            "repository": {
+                "include": true,
+                "properties": [],
+                "methods": [],
+                "externalRefs": []
+            }
         },
         {
             "name": "Person",
             "interface": true,
             "class": true,
-            "controller": true,
-            "business": true,
-            "repository": true,
             "flat": false,
             "properties": [
                 {
@@ -160,7 +187,25 @@
                 }
             ],
             "methods": [],
-            "externalRefs": []
+            "externalRefs": [],
+            "controller": {
+                "include": true,
+                "properties": [],
+                "methods": [],
+                "externalRefs": []
+            },
+            "business": {
+                "include": true,
+                "properties": [],
+                "methods": [],
+                "externalRefs": []
+            },
+            "repository": {
+                "include": true,
+                "properties": [],
+                "methods": [],
+                "externalRefs": []
+            }
         }
     ]
 }

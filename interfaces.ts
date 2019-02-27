@@ -4,6 +4,12 @@ export interface Property {
     required: boolean 
 }
 
+export interface ClassProperty {
+    accesor: string,
+    name: string,
+    type: string
+}
+
 export interface Argument {
     name: string,
     type: string
@@ -29,15 +35,51 @@ export interface Class {
     externalRefs: Array<string>
 }
 
+export interface Controller {
+    name: string,
+    properties: Array<ClassProperty>,
+    methods: Array<Method>,
+    externalRefs: Array<string>
+}
+
+export interface Business {
+    name: string,
+    properties: Array<ClassProperty>,
+    methods: Array<Method>,
+    externalRefs: Array<string>
+}
+
+export interface Repository {
+    name: string,
+    properties: Array<ClassProperty>,
+    methods: Array<Method>,
+    externalRefs: Array<string>
+}
+
 export interface Model {
     name: string,
     interface: boolean,
     class: boolean,
-    controller: boolean,
-    business: boolean,
-    respository: boolean,
     flat: boolean,
     properties: Array<Property>,
     methods: Array<Method>,
-    externalRefs: Array<string>
+    externalRefs: Array<string>,
+    controller: {
+        include: boolean,
+        properties: Array<ClassProperty>,
+        methods: Array<Method>,
+        externalRefs: Array<string>
+    },
+    business: {
+        include: boolean,
+        properties: Array<ClassProperty>,
+        methods: Array<Method>,
+        externalRefs: Array<string>
+    },
+    repository: {
+        include: boolean,
+        properties: Array<ClassProperty>,
+        methods: Array<Method>,
+        externalRefs: Array<string>
+    }
 }
