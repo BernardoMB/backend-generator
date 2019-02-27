@@ -27,6 +27,11 @@
                     "name": "age",
                     "type": "number",
                     "required": false
+                },
+                {
+                    "name": "owners",
+                    "type": "Array<IPerson>",
+                    "required": false
                 }
             ],
             "methods": [
@@ -56,7 +61,8 @@
                         }
                     ]
                 }
-            ]
+            ],
+            "externalRefs": ["Person"]
         },
         {
             "name": "Dog",
@@ -118,7 +124,40 @@
                         }
                     ]
                 }
-            ]
+            ],
+            "externalRefs": []
+        },
+        {
+            "name": "Person",
+            "controller": true,
+            "business": true,
+            "repository": true,
+            "class": true,
+            "flat": false,
+            "properties": [
+                {
+                    "name": "name",
+                    "type": "string",
+                    "required": true
+                },
+                {
+                    "name": "height",
+                    "type": "number",
+                    "required": false
+                }, 
+                {
+                    "name": "weight",
+                    "type": "number",
+                    "required": false
+                }, 
+                {
+                    "name": "age",
+                    "type": "number",
+                    "required": false
+                }
+            ],
+            "methods": [],
+            "externalRefs": []
         }
     ]
 }

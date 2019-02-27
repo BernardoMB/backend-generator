@@ -1,4 +1,9 @@
-var string = "foo",
-    substring = "oo";
+const myFunction = () => {
+    return new Promise(() => {
+        throw 'No mames';
+    });
+}
 
-console.log(string.indexOf(substring) !== -1);
+myFunction().then().catch((err) => {
+    console.log(err);
+});

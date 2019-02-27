@@ -22,7 +22,7 @@ export interface Interface {
     externalRefs: Array<string>
 }
 
-export interface _class {
+export interface Class {
     name: string,
     properties: Array<Property>,
     methods: Array<Method>,
@@ -37,5 +37,6 @@ export interface Model {
     class: boolean,
     flat: boolean,
     properties: Array<Property>,
-    methods: Array<Method> 
+    methods: Array<Method>,
+    externalRefs: Array<string>
 }

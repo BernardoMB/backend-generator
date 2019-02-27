@@ -19,6 +19,7 @@
     "typescript": "^3.3.3333"
   },
   "dependencies": {
-    "@types/node": "^11.9.5"
+    "@types/node": "^11.9.5",
+    "chalk": "^2.4.2"
   }
 }
