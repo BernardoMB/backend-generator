@@ -31,10 +31,11 @@ export interface Class {
 
 export interface Model {
     name: string,
+    interface: boolean,
+    class: boolean,
     controller: boolean,
     business: boolean,
     respository: boolean,
-    class: boolean,
     flat: boolean,
     properties: Array<Property>,
     methods: Array<Method>,

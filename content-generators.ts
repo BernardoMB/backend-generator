@@ -28,7 +28,7 @@ export const generateClassContent = async (_class: Class) => {
     }
     content += `import { I${_class.name} } from './interfaces/I${_class.name}';\n\n`;
     content += `export class ${_class.name} extends Document {\n\n\tprivate _${camelCaseName}: I${_class.name};\n\n`;
-    content += `\tconstructor(${camelCaseName}: I${_class.name}) {\n\t\tthis._${camelCaseName} = ${camelCaseName};\n\t}\n\n`;
+    content += `\tconstructor(${camelCaseName}: I${_class.name}) {\n\t\tsuper();\n\t\tthis._${camelCaseName} = ${camelCaseName};\n\t}\n\n`;
     _class.properties.forEach((property: Property) => {
         content += `\tget ${property.name}(): ${property.type} {\n\t\treturn this._${camelCaseName}.${property.name};\n\t}\n\n`;
     });

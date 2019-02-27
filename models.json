@@ -2,10 +2,11 @@
     "models": [
         {
             "name": "Cat",
+            "interface": true,
+            "class": true,
             "controller": true,
             "business": true,
             "repository": true,
-            "class": true,
             "falt": false,
             "properties": [
                 {
@@ -66,10 +67,11 @@
         },
         {
             "name": "Dog",
+            "interface": true,
+            "class": true,
             "controller": true,
             "business": true,
             "repository": true,
-            "class": true,
             "flat": false,
             "properties": [
                 {
@@ -129,10 +131,11 @@
         },
         {
             "name": "Person",
+            "interface": true,
+            "class": true,
             "controller": true,
             "business": true,
             "repository": true,
-            "class": true,
             "flat": false,
             "properties": [
                 {
