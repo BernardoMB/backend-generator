@@ -1,12 +1,25 @@
 import * as fs from 'fs';
 import chalk from 'chalk';
 import { Model } from './interfaces';
-import { generateModel } from './generators';
+import { generateModel, generateGenericServerFiles } from './generators';
 import { outputCreatedFiles, asyncForEach } from './utils';
 
 const data: {models:Array<Model>} = JSON.parse(fs.readFileSync('models.json').toString());
 
 const models: Array<Model> = data.models;
+
+const generateServerFiles = async () => {
+    try {
+        console.log(chalk.blueBright('Generating server files...\n'));
+        const createdFilesNames: Array<string> = await generateGenericServerFiles();
+        outputCreatedFiles(createdFilesNames);
+        const message = `Server files generated!\n`
+        console.log(chalk.greenBright(message));
+    } catch (error) {
+        const message = `Error ocurred`;
+        console.log(chalk.redBright(message, error));
+    }
+}
 
 const generateModels = async (models: Array<Model>) => {
     console.log(chalk.blueBright('Generating models\n'));
@@ -24,4 +37,5 @@ const generateModels = async (models: Array<Model>) => {
     });
 }
 
+generateServerFiles();
 generateModels(models);

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "generate": "ts-node main.ts",
-    "clean": "concurrently \"rd /s /q models\" \"rd /s /q models\" \"rd /s /q controllers\" \"rd /s /q businesses\" \"rd /s /q repositories\""
+    "clean": "concurrently \"rd /s /q server\""
   },
   "repository": {
     "type": "git",

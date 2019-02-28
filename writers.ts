@@ -1,11 +1,27 @@
 import * as fs from 'fs';
 import chalk from 'chalk';
 import { Interface, Class, Controller, Business, Repository } from "./interfaces";
-import { generateInterfaceContent, generateClassContent, generateControllerContent, generateBusinessInterfaceContent, generateBusinessContent, generateRepositoryContent } from "./content-generators";
+import { generateInterfaceContent, 
+    generateClassContent, 
+    generateControllerContent,
+    generateBusinessInterfaceContent, 
+    generateBusinessContent, 
+    generateRepositoryContent, 
+    generateHandleErrorContent, 
+    generateBaseControllerContent, 
+    generateReadControllerContent, 
+    generateWriteControllerContent, 
+    generateBaseBusinessContent, 
+    generateReadBusinessContent, 
+    generateWriteBusinessContent, 
+    generateBaseRepositoryContent, 
+    generateReadRepositoryContent,
+    generateWriteRepositoryContent,
+} from "./content-generators";
 
 export const makeDirectory = async (directory: string) => {
     try {
-        if (!fs.existsSync(directory)){
+        if (!fs.existsSync(directory)) {
             fs.mkdirSync(directory);
         }
         return 'Directory created!';
@@ -57,6 +73,43 @@ export const writeClass = async (_class: Class, flat: boolean) => {
     return createdFilePath;
 }
 
+export const writeControllerFiles = async () => {
+    const filePaths: Array<string> = [];
+
+    let fileName: string = 'handle-error.ts';
+    let filePath: string = `./server/controllers/helps/${fileName}`;
+    await makeDirectory('./server');
+    await makeDirectory('./server/controllers');
+    await makeDirectory('./server/controllers/helps');
+    let content: string = await generateHandleErrorContent();
+    let createdFilePath: string = await writeFile(filePath, content);
+    filePaths.push(createdFilePath);
+
+    fileName = 'BaseController.ts';
+    filePath = `./server/controllers/interfaces/base/${fileName}`;
+    await makeDirectory('./server/controllers/interfaces');
+    await makeDirectory('./server/controllers/interfaces/base');
+    content = await generateBaseControllerContent();
+    createdFilePath = await writeFile(filePath, content);
+    filePaths.push(createdFilePath);
+
+    fileName = 'ReadController.ts';
+    filePath = `./server/controllers/interfaces/common/${fileName}`;
+    await makeDirectory('./server/controllers/interfaces/common');
+    content = await generateReadControllerContent();
+    createdFilePath = await writeFile(filePath, content);
+    filePaths.push(createdFilePath);
+
+    fileName = 'WriteController.ts';
+    filePath = `./server/controllers/interfaces/common/${fileName}`;
+    await makeDirectory('./server/controllers/interfaces/common');
+    content = await generateWriteControllerContent();
+    createdFilePath = await writeFile(filePath, content);
+    filePaths.push(createdFilePath);
+
+    return filePaths;
+}
+
 export const writeController = async (controller: Controller, flat: Boolean) => {
     const fileName: string = `${controller.name}Controller.ts`;
     let filePath: string;
@@ -70,6 +123,34 @@ export const writeController = async (controller: Controller, flat: Boolean) => 
     const content: string = await generateControllerContent(controller);
     const createdFilePath: string = await writeFile(filePath, content);
     return createdFilePath;
+}
+
+export const writeBusinessFiles = async () => {
+    const filePaths: Array<string> = [];
+
+    let fileName: string = 'BaseBusiness.ts';
+    let filePath: string = `./server/businesses/interfaces/base/${fileName}`;
+    await makeDirectory('./server/businesses/interfaces');
+    await makeDirectory('./server/businesses/interfaces/base');
+    let content: string = await generateBaseBusinessContent();
+    let createdFilePath: string = await writeFile(filePath, content);
+    filePaths.push(createdFilePath);
+
+    fileName = 'ReadBusiness.ts';
+    filePath = `./server/businesses/interfaces/common/${fileName}`;
+    await makeDirectory('./server/businesses/interfaces/common');
+    content = await generateReadBusinessContent();
+    createdFilePath = await writeFile(filePath, content);
+    filePaths.push(createdFilePath);
+
+    fileName = 'WriteBusiness.ts';
+    filePath = `./server/businesses/interfaces/common/${fileName}`;
+    await makeDirectory('./server/businesses/interfaces/common');
+    content = await generateWriteBusinessContent();
+    createdFilePath = await writeFile(filePath, content);
+    filePaths.push(createdFilePath);
+
+    return filePaths;
 }
 
 export const writeBusiness = async (business: Business, flat: Boolean) => {
@@ -91,6 +172,34 @@ export const writeBusiness = async (business: Business, flat: Boolean) => {
     const createdBusinessInterfaceFilePath: string = await writeFile(businessInterfaceFilePath, businessInterfaceContent);
     const createdBusinessFilePath: string = await writeFile(businessFilePath, businessContent);
     return [createdBusinessInterfaceFilePath, createdBusinessFilePath];
+}
+
+export const writeRepositoryFiles = async () => {
+    const filePaths: Array<string> = [];
+
+    let fileName: string = 'BaseRepository.ts';
+    let filePath: string = `./server/repositories/interfaces/base/${fileName}`;
+    await makeDirectory('./server/repositories/interfaces');
+    await makeDirectory('./server/repositories/interfaces/base');
+    let content: string = await generateBaseRepositoryContent();
+    let createdFilePath: string = await writeFile(filePath, content);
+    filePaths.push(createdFilePath);
+
+    fileName = 'ReadRepository.ts';
+    filePath = `./server/repositories/interfaces/common/${fileName}`;
+    await makeDirectory('./server/repositories/interfaces/common');
+    content = await generateReadRepositoryContent();
+    createdFilePath = await writeFile(filePath, content);
+    filePaths.push(createdFilePath);
+
+    fileName = 'WriteRepository.ts';
+    filePath = `./server/repositories/interfaces/common/${fileName}`;
+    await makeDirectory('./server/repositories/interfaces/common');
+    content = await generateWriteRepositoryContent();
+    createdFilePath = await writeFile(filePath, content);
+    filePaths.push(createdFilePath);
+
+    return filePaths;
 }
 
 export const writeRepository = async (respository: Repository, flat: Boolean) => {

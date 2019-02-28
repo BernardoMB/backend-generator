@@ -67,6 +67,44 @@ export const generateClassContent = async (_class: Class) => {
   return content;
 };
 
+export const generateHandleErrorContent = async () => `
+import { NextFunction } from 'express';
+
+export function handleError(error, message: string, next: NextFunction) {
+  next({
+    message: \`\${message}: \${error.message}\`,
+    code: !!error.code ? error.code : 500
+  });
+}
+`;
+
+export const generateBaseControllerContent = async () => `
+import { IBaseBusiness } from './../../../business/interfaces/base/BaseBusiness';
+import { IWriteController } from '../common/WriteController';
+import { IReadController } from '../common/ReadController';
+  
+export interface IBaseController<T extends IBaseBusiness<Object>> extends IReadController, IWriteController {}
+`;
+
+export const generateReadControllerContent = async () => `
+import { RequestHandler } from 'express';
+
+export interface IReadController {
+    retrieve: RequestHandler;
+    findById: RequestHandler;
+}
+`;
+
+export const generateWriteControllerContent = async () => `
+import { RequestHandler } from 'express';
+
+export interface IWriteController {
+    create: RequestHandler;
+    update: RequestHandler;
+    delete: RequestHandler;
+}
+`;
+
 export const generateControllerContent = async (controller: Controller) => {
   const name: string = controller.name;
   let content: string = `
@@ -168,6 +206,30 @@ export class ${name}Controller implements IBaseController<${name}Business> {
   return content;
 };
 
+export const generateBaseBusinessContent = async () => `
+import { IRead } from '../common/Read';
+import { IWrite } from '../common/Write';
+
+export interface IBaseBusiness<T> extends IRead<T>, IWrite<T> {
+  throwIfNotExists?: (item: T) => void;
+}
+`;
+
+export const generateReadBusinessContent = async () => `
+export interface IRead<T> {
+  retrieve: () => Promise<T[]>;
+  findById: (id: string) => Promise<T>;
+}
+`;
+
+export const generateWriteBusinessContent = async () => `
+export interface IWrite<T> {
+  create: (item: T, callback: (error: any, result: T ) => void) => void;
+  update: (_id: string, item: T, callback: (error: any, result: T) => void) => void ;
+  delete: (_id: string, callback: (error: any, result: string) => void) => void;
+}
+`;
+
 export const generateBusinessInterfaceContent = async (business: Business) => {
   const name: string = business.name;
   let content:  string = `
@@ -255,6 +317,101 @@ export class ${name}Business implements I${name}Business {
 }\n`;
   return content;
 }
+
+export const generateBaseRepositoryContent = async () => `
+import { Document, Model } from 'mongoose';
+import { IWrite } from '../interfaces/base/Write';
+import { IRead } from '../interfaces/base/Read';
+
+export abstract class RepositoryBase<T extends Document> implements IRead<T>, IWrite<T> {
+  protected _model: Model<Document>;
+
+  constructor(schemaModel: Model<Document>) {
+    this._model = schemaModel;
+  }
+
+  async create(item: T): Promise<T> {
+    return <T>await this._model.create(item);
+  }
+
+  async createMany(items: T[]): Promise<T[]> {
+    return <T[]>await this._model.insertMany(items);
+  }
+
+  async retrieve(): Promise<T[]> {
+    return <T[]>await this._model.find({}).exec();
+  }
+
+  async retrieveBy(conditions: any, projection?: any | null, options?: any | null): Promise<T[]> {
+    return <T[]>await this._model.find(conditions, projection, options).exec();
+  }
+
+  async update(_id: string, item: T): Promise<T> {
+    return <T>await this._model.findByIdAndUpdate(_id, item, { new: true }).exec();
+  }
+
+  async updateMany(conditions: any, item: T, options?: any | null): Promise<T[]> {
+    return <T[]>await this._model.updateMany(conditions, item, options).exec();
+  }
+
+  async delete(_id: string): Promise<T> {
+    return <T>await this._model.findByIdAndDelete(_id).exec();
+  }
+
+  async deleteMany(condition: any): Promise<any> {
+    return await this._model.deleteMany(condition).exec();
+  }
+
+  async findById(_id: string): Promise<T> {
+    return <T>await this._model.findById(_id).exec();
+  }
+
+  async find(conditions: any, projections?: string, options?: any): Promise<T[]> {
+    if (!!projections && !options) {
+      return <T[]>await this._model.find(conditions, projections).exec();
+    }
+    if (!!projections && !!options) {
+      return <T[]>await this._model.find(conditions, projections, options).exec();
+    }
+    return <T[]>await this._model.find(conditions).exec();
+  }
+
+  async findOne(conditions: any, projections?: string, options?: any): Promise<T> {
+    if (!!projections && !options) {
+      return <T>await this._model.findOne(conditions, projections).exec();
+    }
+    if (!!projections && !!options) {
+      return <T>await this._model.findOne(conditions, projections, options).exec();
+    }
+    return <T>await this._model.findOne(conditions).exec();
+  }
+
+  async drop() {
+    return this._model.deleteMany({}).exec();
+  }
+}
+`;
+
+export const generateReadRepositoryContent = async () => `
+export interface IRead<T> {
+  retrieve: () => Promise<T[]>;
+  retrieveBy: (conditions: any, projection?: any | null, options?: any | null) => Promise<T[]>;
+  find: (conditions: any, projections?: string, options?: any) => Promise<T[]>;
+  findOne: (conditions: any, projections?: string, options?: any) => Promise<T>;
+  findById: (id: string) => Promise<T>;
+}
+`;
+export const generateWriteRepositoryContent = async () => `
+export interface IWrite<T> {
+  create: (item: T) => Promise<T>;
+  createMany: (items: T[]) => Promise<T[]>;
+  update: (_id: string, item: T) => Promise<T>;
+  updateMany: (conditions: any, item: T, options?: any | null) => Promise<T[]>;
+  delete: (_id: string) => Promise<T>;
+  deleteMany: (condition: any) => Promise<any>;
+  drop: () => Promise<any>;
+}
+`;
 
 export const generateRepositoryContent = async (repository: Repository) => {
   const name: string = repository.name;

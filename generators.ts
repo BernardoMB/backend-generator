@@ -1,8 +1,38 @@
 import { Model, Interface, Class, Controller, Business, Repository } from "./interfaces";
-import { writeInterface, writeClass, writeController, writeBusiness, writeRepository } from "./writers";
+import { writeInterface, writeClass, writeController, writeBusiness, writeRepository, writeControllerFiles, writeBusinessFiles, writeRepositoryFiles } from "./writers";
+import chalk from "chalk";
+
+export const generateGenericServerFiles = async () => {
+    let files: Array<string> = [];
+    files = [
+        ...files,
+        ...(await writeControllerFiles())
+    ];
+    /* filePaths = await writeControllerFiles();
+    filePaths.forEach((filePath: string) => {
+        files.push(filePath);
+    }); */
+    files = [
+        ...files,
+        ...(await writeBusinessFiles())
+    ]
+    /* filePaths = await writeBusinessFiles(); 
+    filePaths.forEach((filePath: string) => {
+        files.push(filePath);
+    }); */
+    files = [
+        ...files,
+        ...(await writeRepositoryFiles())
+    ]
+    /* filePaths = await writeRepositoryFiles(); 
+    filePaths.forEach((filePath: string) => {
+        files.push(filePath);
+    }); */
+    return files;
+}
 
 export const generateModel = async (model: Model) => {
-    const files: Array<string> = [];
+    let files: Array<string> = [];
     let filePath: string;
     let filePaths: Array<string>;
     if (model.interface) {
@@ -13,6 +43,7 @@ export const generateModel = async (model: Model) => {
         }
         filePath = await writeInterface(_interface, model.flat);
         files.push(filePath);
+        console.log(chalk.magentaBright('Generated interface!'));
     }
     if (model.class) {
         const _class: Class = {
@@ -23,6 +54,7 @@ export const generateModel = async (model: Model) => {
         }
         filePath = await writeClass(_class, model.flat);
         files.push(filePath);
+        console.log(chalk.magentaBright('Generated class!'));
     }
     if (model.controller.include) {
         const controller: Controller = {
@@ -33,6 +65,7 @@ export const generateModel = async (model: Model) => {
         }
         filePath = await writeController(controller, model.flat);
         files.push(filePath);
+        console.log(chalk.magentaBright('Generated controller files!'));
     }
     if (model.business.include) {
         const business: Business = {
@@ -45,6 +78,7 @@ export const generateModel = async (model: Model) => {
         filePaths.forEach((filePath: string) => {
             files.push(filePath);
         });
+        console.log(chalk.magentaBright('Generated business files!'));
     }
     if (model.repository.include) {
         const repository: Repository = {
@@ -55,7 +89,8 @@ export const generateModel = async (model: Model) => {
         }
         filePath = await writeRepository(repository, model.flat);
         files.push(filePath);
+        console.log(chalk.magentaBright('Generated repository files!'));
     }
-    
     return files;
 }
+
