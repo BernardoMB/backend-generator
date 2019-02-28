@@ -59,9 +59,11 @@ export const generateClassContent = async (_class: Class) => {
         index === method.arguments.length - 1 ? "" : ","
         }`;
     });
-    content += `): ${method.type} {\n\t\treturn new Error('${
-      method.name
-      } not implemented in class ${_class.name}');\n\t}\n\n`;
+      content += `): ${method.type} {
+        throw new Error('${method.name} not implemented in class ${name}Controller');
+        return null;
+      }
+        `;
   });
   content += "}\n";
   return content;
@@ -79,9 +81,9 @@ export function handleError(error, message: string, next: NextFunction) {
 `;
 
 export const generateBaseControllerContent = async () => `
-import { IBaseBusiness } from './../../../business/interfaces/base/BaseBusiness';
-import { IWriteController } from '../common/WriteController';
-import { IReadController } from '../common/ReadController';
+import { IBaseBusiness } from '../../businesses/interfaces/BaseBusiness';
+import { IWriteController } from './WriteController';
+import { IReadController } from './ReadController';
   
 export interface IBaseController<T extends IBaseBusiness<Object>> extends IReadController, IWriteController {}
 `;
@@ -110,11 +112,11 @@ export const generateControllerContent = async (controller: Controller) => {
   let content: string = `
 import { Request, Response, NextFunction } from 'express';
 import { handleError } from './helps/handle-error';
-import { IBaseController } from './interfaces/base/BaseController';
+import { IBaseController } from './interfaces/BaseController';
 import { ${name}Business } from '../businesses/${name}Business';
-import { I${name} } from './../models/interfaces/I${name}';`;
+import { I${name} } from './../models/interfaces/I${name}';\n`;
   controller.externalRefs.forEach((externalRef: string) => {
-    content += `import { I${externalRef} } from './../model/interfaces/I${externalRef}';
+    content += `import { I${externalRef} } from './../models/interfaces/I${externalRef}';
     `;
   });
   content += `
@@ -207,23 +209,23 @@ export class ${name}Controller implements IBaseController<${name}Business> {
 };
 
 export const generateBaseBusinessContent = async () => `
-import { IRead } from '../common/Read';
-import { IWrite } from '../common/Write';
+import { IReadBusiness } from './ReadBusiness';
+import { IWriteBusiness } from './WriteBusiness';
 
-export interface IBaseBusiness<T> extends IRead<T>, IWrite<T> {
+export interface IBaseBusiness<T> extends IReadBusiness<T>, IWriteBusiness<T> {
   throwIfNotExists?: (item: T) => void;
 }
 `;
 
 export const generateReadBusinessContent = async () => `
-export interface IRead<T> {
+export interface IReadBusiness<T> {
   retrieve: () => Promise<T[]>;
   findById: (id: string) => Promise<T>;
 }
 `;
 
 export const generateWriteBusinessContent = async () => `
-export interface IWrite<T> {
+export interface IWriteBusiness<T> {
   create: (item: T, callback: (error: any, result: T ) => void) => void;
   update: (_id: string, item: T, callback: (error: any, result: T) => void) => void ;
   delete: (_id: string, callback: (error: any, result: string) => void) => void;
@@ -233,7 +235,7 @@ export interface IWrite<T> {
 export const generateBusinessInterfaceContent = async (business: Business) => {
   const name: string = business.name;
   let content:  string = `
-import { IBaseBusiness } from './base/BaseBusiness';
+import { IBaseBusiness } from './BaseBusiness';
 import { I${name} } from './../../models/interfaces/I${name}';
 
 export interface I${name}Business extends IBaseBusiness<I${name}> {}
@@ -244,11 +246,11 @@ export interface I${name}Business extends IBaseBusiness<I${name}> {}
 export const generateBusinessContent = async (business: Business) => {
   const name: string = business.name;
   let content: string = `
-import { ${name}Repository } from '../repository/${name}Repository';
+import { ${name}Repository } from '../repositories/${name}Repository';
 import { I${name}Business } from './interfaces/I${name}Business';
-import { I${name} } from '../models/interfaces/I${name}';`;
+import { I${name} } from '../models/interfaces/I${name}';\n`;
   business.externalRefs.forEach((externalRef: string) => {
-    content += `import { I${externalRef} } from './../model/interfaces/I${externalRef}';
+    content += `import { I${externalRef} } from './../models/interfaces/I${externalRef}';
     `;
   });
   content += `
@@ -320,8 +322,8 @@ export class ${name}Business implements I${name}Business {
 
 export const generateBaseRepositoryContent = async () => `
 import { Document, Model } from 'mongoose';
-import { IWrite } from '../interfaces/base/Write';
-import { IRead } from '../interfaces/base/Read';
+import { IReadRepository } from '../interfaces/ReadRepository';
+import { IWriteRepository } from '../interfaces/WriteRepository';
 
 export abstract class RepositoryBase<T extends Document> implements IRead<T>, IWrite<T> {
   protected _model: Model<Document>;
@@ -393,7 +395,7 @@ export abstract class RepositoryBase<T extends Document> implements IRead<T>, IW
 `;
 
 export const generateReadRepositoryContent = async () => `
-export interface IRead<T> {
+export interface IReadRepository<T> {
   retrieve: () => Promise<T[]>;
   retrieveBy: (conditions: any, projection?: any | null, options?: any | null) => Promise<T[]>;
   find: (conditions: any, projections?: string, options?: any) => Promise<T[]>;
@@ -402,7 +404,7 @@ export interface IRead<T> {
 }
 `;
 export const generateWriteRepositoryContent = async () => `
-export interface IWrite<T> {
+export interface IWriteRepository<T> {
   create: (item: T) => Promise<T>;
   createMany: (items: T[]) => Promise<T[]>;
   update: (_id: string, item: T) => Promise<T>;
@@ -416,7 +418,7 @@ export interface IWrite<T> {
 export const generateRepositoryContent = async (repository: Repository) => {
   const name: string = repository.name;
   let content: string = `
-import { RepositoryBase } from './base/RepositoryBase';
+import { RepositoryBase } from './interfaces/BaseRepository';
 import { I${name} } from '../models/interfaces/I${name}';
 import { ${name}Schema } from '..data-access/schemas/${name}Schema';`;
   repository.externalRefs.forEach((externalRef: string) => {

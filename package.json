@@ -16,11 +16,14 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/kantostudio/backend-generator#readme",
   "devDependencies": {
+    "concurrently": "^4.1.0",
     "ts-node": "^8.0.2",
     "typescript": "^3.3.3333"
   },
   "dependencies": {
     "@types/node": "^11.9.5",
-    "chalk": "^2.4.2"
+    "chalk": "^2.4.2",
+    "express": "^4.16.4",
+    "mongoose": "^5.4.16"
   }
 }

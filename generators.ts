@@ -1,33 +1,14 @@
 import { Model, Interface, Class, Controller, Business, Repository } from "./interfaces";
-import { writeInterface, writeClass, writeController, writeBusiness, writeRepository, writeControllerFiles, writeBusinessFiles, writeRepositoryFiles } from "./writers";
+import { writeModelInterface, writeModelClass, writeModelController, writeModelBusiness, writeModelRepository, writeControllerFiles, writeBusinessFiles, writeRepositoryFiles } from "./writers";
 import chalk from "chalk";
 
 export const generateGenericServerFiles = async () => {
     let files: Array<string> = [];
     files = [
-        ...files,
-        ...(await writeControllerFiles())
-    ];
-    /* filePaths = await writeControllerFiles();
-    filePaths.forEach((filePath: string) => {
-        files.push(filePath);
-    }); */
-    files = [
-        ...files,
-        ...(await writeBusinessFiles())
-    ]
-    /* filePaths = await writeBusinessFiles(); 
-    filePaths.forEach((filePath: string) => {
-        files.push(filePath);
-    }); */
-    files = [
-        ...files,
+        ...(await writeControllerFiles()),
+        ...(await writeBusinessFiles()),
         ...(await writeRepositoryFiles())
-    ]
-    /* filePaths = await writeRepositoryFiles(); 
-    filePaths.forEach((filePath: string) => {
-        files.push(filePath);
-    }); */
+    ];
     return files;
 }
 
@@ -41,7 +22,7 @@ export const generateModel = async (model: Model) => {
             properties: model.properties,
             externalRefs: model.externalRefs
         }
-        filePath = await writeInterface(_interface, model.flat);
+        filePath = await writeModelInterface(_interface, model.flat);
         files.push(filePath);
         console.log(chalk.magentaBright('Generated interface!'));
     }
@@ -52,9 +33,9 @@ export const generateModel = async (model: Model) => {
             methods: model.methods,
             externalRefs: model.externalRefs
         }
-        filePath = await writeClass(_class, model.flat);
+        filePath = await writeModelClass(_class, model.flat);
         files.push(filePath);
-        console.log(chalk.magentaBright('Generated class!'));
+        console.log(chalk.magentaBright('Generated model class!'));
     }
     if (model.controller.include) {
         const controller: Controller = {
@@ -63,9 +44,9 @@ export const generateModel = async (model: Model) => {
             methods: model.controller.methods,
             externalRefs: model.controller.externalRefs
         }
-        filePath = await writeController(controller, model.flat);
+        filePath = await writeModelController(controller, model.flat);
         files.push(filePath);
-        console.log(chalk.magentaBright('Generated controller files!'));
+        console.log(chalk.magentaBright('Generated model controller files!'));
     }
     if (model.business.include) {
         const business: Business = {
@@ -74,11 +55,11 @@ export const generateModel = async (model: Model) => {
             methods: model.business.methods,
             externalRefs: model.business.externalRefs
         }
-        filePaths = await writeBusiness(business, model.flat);
+        filePaths = await writeModelBusiness(business, model.flat);
         filePaths.forEach((filePath: string) => {
             files.push(filePath);
         });
-        console.log(chalk.magentaBright('Generated business files!'));
+        console.log(chalk.magentaBright('Generated model business files!'));
     }
     if (model.repository.include) {
         const repository: Repository = {
@@ -87,9 +68,9 @@ export const generateModel = async (model: Model) => {
             methods: model.repository.methods,
             externalRefs: model.repository.externalRefs
         }
-        filePath = await writeRepository(repository, model.flat);
+        filePath = await writeModelRepository(repository, model.flat);
         files.push(filePath);
-        console.log(chalk.magentaBright('Generated repository files!'));
+        console.log(chalk.magentaBright('Generated model repository files!'));
     }
     return files;
 }
