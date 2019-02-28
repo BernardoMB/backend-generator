@@ -63,15 +63,69 @@
             "externalRefs": ["Person"],
             "controller": {
                 "include": true,
-                "properties": [],
-                "methods": [],
-                "externalRefs": []
+                "properties": [
+                    {
+                        "accesor": "public",
+                        "name": "myProperty1",
+                        "type": "string"
+                    },
+                    {
+                        "accesor": "private",
+                        "name": "myProperty2",
+                        "type": "Array<IPerson>"
+                    }
+                ],
+                "methods": [
+                    {
+                        "name": "myFunction",
+                        "accesor": "public",
+                        "type": "Promise<boolean>",
+                        "arguments": [
+                            {
+                                "name": "myFirstArgument",
+                                "type": "Array<Date>"
+                            }, 
+                            {
+                                "name": "mySecondArgument",
+                                "type": "number"
+                            }
+                        ]
+                    }
+                ],
+                "externalRefs": ["Person"]
             },
             "business": {
                 "include": true,
-                "properties": [],
-                "methods": [],
-                "externalRefs": []
+                "properties": [
+                    {
+                        "accesor": "public",
+                        "name": "myProperty1",
+                        "type": "string"
+                    },
+                    {
+                        "accesor": "private",
+                        "name": "myProperty2",
+                        "type": "Array<IPerson>"
+                    }
+                ],
+                "methods": [
+                    {
+                        "name": "myFunction",
+                        "accesor": "public",
+                        "type": "Promise<boolean>",
+                        "arguments": [
+                            {
+                                "name": "myFirstArgument",
+                                "type": "Array<Date>"
+                            }, 
+                            {
+                                "name": "mySecondArgument",
+                                "type": "number"
+                            }
+                        ]
+                    }
+                ],
+                "externalRefs": ["Person"]
             },
             "repository": {
                 "include": true,

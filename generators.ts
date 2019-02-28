@@ -1,57 +1,61 @@
 import { Model, Interface, Class, Controller, Business, Repository } from "./interfaces";
-import { writeInterface, writeClass, writeController } from "./writers";
+import { writeInterface, writeClass, writeController, writeBusiness, writeRepository } from "./writers";
 
 export const generateModel = async (model: Model) => {
-        const files: Array<string> = [];
-        let filePath: string;
-        if (model.interface) {
-            const _interface: Interface = {
-                name: model.name,
-                properties: model.properties,
-                externalRefs: model.externalRefs
-            }
-            filePath = await writeInterface(_interface, model.flat);
-            files.push(filePath);
+    const files: Array<string> = [];
+    let filePath: string;
+    let filePaths: Array<string>;
+    if (model.interface) {
+        const _interface: Interface = {
+            name: model.name,
+            properties: model.properties,
+            externalRefs: model.externalRefs
         }
-        if (model.class) {
-            const _class: Class = {
-                name: model.name,
-                properties: model.properties,
-                methods: model.methods,
-                externalRefs: model.externalRefs
-            }
-            filePath = await writeClass(_class, model.flat);
-            files.push(filePath);
+        filePath = await writeInterface(_interface, model.flat);
+        files.push(filePath);
+    }
+    if (model.class) {
+        const _class: Class = {
+            name: model.name,
+            properties: model.properties,
+            methods: model.methods,
+            externalRefs: model.externalRefs
         }
-        if (model.controller.include) {
-            const controller: Controller = {
-                name: model.name,
-                properties: model.controller.properties,
-                methods: model.controller.methods,
-                externalRefs: model.controller.externalRefs
-            }
-            filePath = await writeController(controller, model.flat);
-            files.push(filePath);
+        filePath = await writeClass(_class, model.flat);
+        files.push(filePath);
+    }
+    if (model.controller.include) {
+        const controller: Controller = {
+            name: model.name,
+            properties: model.controller.properties,
+            methods: model.controller.methods,
+            externalRefs: model.controller.externalRefs
         }
-        /* if (model.business.include) {
-            const business: Business = {
-                name: model.name,
-                properties: model.business.properties,
-                methods: model.business.methods,
-                externalRefs: model.business.externalRefs
-            }
-            filePath = await writeBusiness(business, model.flat);
-            files.push(filePath);
+        filePath = await writeController(controller, model.flat);
+        files.push(filePath);
+    }
+    if (model.business.include) {
+        const business: Business = {
+            name: model.name,
+            properties: model.business.properties,
+            methods: model.business.methods,
+            externalRefs: model.business.externalRefs
         }
-        if (model.repository.include) {
-            const repository: Repository = {
-                name: model.name,
-                properties: model.repository.properties,
-                methods: model.repository.methods,
-                externalRefs: model.repository.externalRefs
-            }
-            filePath = await writeRepository(repository, model.flat);
+        filePaths = await writeBusiness(business, model.flat);
+        filePaths.forEach((filePath: string) => {
             files.push(filePath);
-        } */
-        return files;
+        });
+    }
+    if (model.repository.include) {
+        const repository: Repository = {
+            name: model.name,
+            properties: model.repository.properties,
+            methods: model.repository.methods,
+            externalRefs: model.repository.externalRefs
+        }
+        filePath = await writeRepository(repository, model.flat);
+        files.push(filePath);
+    }
+    
+    return files;
 }
