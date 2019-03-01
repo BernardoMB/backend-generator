@@ -16,8 +16,8 @@ const generateServerFiles = async () => {
         const message = `Server files generated!\n`
         console.log(chalk.greenBright(message));
     } catch (error) {
-        const message = `Error ocurred`;
-        console.log(chalk.redBright(message, error));
+        const message = `Error ocurred generating server files`;
+        console.log(chalk.red(message, error));
     }
 }
 
@@ -31,11 +31,15 @@ const generateModels = async (models: Array<Model>) => {
             const message = `${model.name} generated!\n`
             console.log(chalk.greenBright(message));
         } catch (error) {
-            const message = `Error ocurred`;
-            console.log(chalk.redBright(message, error));
+            const message = `Error generating model`;
+            console.log(chalk.red(message, error));
         }
     });
 }
 
-generateServerFiles();
-generateModels(models);
+const generateBackEnd = async () => {
+	await generateServerFiles();
+	await generateModels(models);
+}
+
+generateBackEnd();

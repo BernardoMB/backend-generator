@@ -23,7 +23,7 @@ export const generateInterfaceContent = async (_interface: Interface) => {
   _interface.properties.forEach((property: Property) => {
     content += `\t${property.name}${property.required ? "" : "?"}: ${
       property.type
-      };\n`;
+    };\n`;
   });
   content += "}\n";
   return content;
@@ -31,36 +31,33 @@ export const generateInterfaceContent = async (_interface: Interface) => {
 
 export const generateClassContent = async (_class: Class) => {
   let content: string = `import { Document } from 'mongoose';\n\n`;
-  const camelCaseName = toCamelCase(_class.name);
+  const name = _class.name;
+  const camelCaseName = toCamelCase(name);
   if (_class.externalRefs.length > 0) {
     for (let extRef of _class.externalRefs) {
       content += `import { I${extRef} } from './interfaces/I${extRef}';\n`;
     }
     content += "\n";
   }
-  content += `import { I${_class.name} } from './interfaces/I${
-    _class.name
-    }';\n\n`;
-  content += `export class ${
-    _class.name
-    } extends Document {\n\n\tprivate _${camelCaseName}: I${_class.name};\n\n`;
-  content += `\tconstructor(${camelCaseName}: I${
-    _class.name
-    }) {\n\t\tsuper();\n\t\tthis._${camelCaseName} = ${camelCaseName};\n\t}\n\n`;
+  content += `import { I${name} } from './interfaces/I${name}';\n\n`;
+  content += `export class ${name} extends Document {\n\n\tprivate _${camelCaseName}: I${name};\n\n`;
+  content += `\tconstructor(${camelCaseName}: I${name}) {\n\t\tsuper();\n\t\tthis._${camelCaseName} = ${camelCaseName};\n\t}\n\n`;
   _class.properties.forEach((property: Property) => {
     content += `\tget ${property.name}(): ${
       property.type
-      } {\n\t\treturn this._${camelCaseName}.${property.name};\n\t}\n\n`;
+    } {\n\t\treturn this._${camelCaseName}.${property.name};\n\t}\n\n`;
   });
   _class.methods.forEach((method: Method) => {
     content += `\t${method.accesor} ${method.name}(`;
     method.arguments.forEach((argument: Argument, index: number) => {
       content += `${index == 0 ? "" : " "}${argument.name}: ${argument.type}${
         index === method.arguments.length - 1 ? "" : ","
-        }`;
+      }`;
     });
-      content += `): ${method.type} {
-        throw new Error('${method.name} not implemented in class ${name}Controller');
+    content += `): ${method.type} {
+        throw new Error('${method.name} not implemented in class ${
+      name
+    }Controller');
         return null;
       }
         `;
@@ -132,7 +129,9 @@ export class ${name}Controller implements IBaseController<${name}Business> {
     try {
       const ${toCamelCase(name)}: I${name} = <I${name}>request.body;
       const ${toCamelCase(name)}Business = new ${name}Business();
-      const created${name}: I${name} = await ${toCamelCase(name)}Business.create(${toCamelCase(name)});
+      const created${name}: I${name} = await ${toCamelCase(
+    name
+  )}Business.create(${toCamelCase(name)});
       response.status(200).json({ ${toCamelCase(name)}: created${name} });
     } catch (error) {
       handleError(error, 'Error creating ${toCamelCase(name)}', next);
@@ -142,21 +141,27 @@ export class ${name}Controller implements IBaseController<${name}Business> {
   public async retrieve(request: Request, response: Response, next: NextFunction): Promise<void> {
     try {
       const ${toCamelCase(name)}Business = new ${name}Business();
-      const ${toCamelCase(name)}s: Array<I${name}> = await ${toCamelCase(name)}Business.retrieve();
-      response.status(200).json({ ${toCamelCase(name)}s: ${toCamelCase(name)}s });
+      const ${toCamelCase(name)}s: Array<I${name}> = await ${toCamelCase(
+    name
+  )}Business.retrieve();
+      response.status(200).json({ ${toCamelCase(name)}s: ${toCamelCase(
+    name
+  )}s });
     } catch (error) {
       handleError(error, 'Error retrieving ${toCamelCase(name)}s', next);
     }
   }
 
-  public async update(request: Request, response: Response, next: NextFunction) {
+  public async update(request: Request, response: Response, next: NextFunction): Promise<void> {
     try {
       const new${name}: I${name} = <I${name}>request.body;
       const {
         params: { id }
       } = request;
       const ${toCamelCase(name)}Business = new ${name}Business();
-      const updated${name}: I${name} = await ${toCamelCase(name)}Business.update(id, new${name});
+      const updated${name}: I${name} = await ${toCamelCase(
+    name
+  )}Business.update(id, new${name});
       response.status(201).json({ ${toCamelCase(name)}: updated${name} });
     } catch (error) {
       handleError(error, ' Error updating ${toCamelCase(name)}', next);
@@ -182,23 +187,27 @@ export class ${name}Controller implements IBaseController<${name}Business> {
         params: { id }
       } = request;
       const ${toCamelCase(name)}Business = new ${name}Business();
-      const ${toCamelCase(name)}: I${name} = await ${toCamelCase(name)}Business.findById(id);
+      const ${toCamelCase(name)}: I${name} = await ${toCamelCase(
+    name
+  )}Business.findById(id);
       response.status(200).json({ ${toCamelCase(name)}: ${toCamelCase(name)} });
     } catch (error) {
       handleError(error, 'Error finding ${toCamelCase(name)}', next);
     }
   }\n
   `;
-  
+
   controller.methods.forEach((method: Method) => {
     content += `${method.accesor} ${method.name}(`;
     method.arguments.forEach((argument: Argument, index: number) => {
       content += `${index == 0 ? "" : " "}${argument.name}: ${argument.type}${
         index === method.arguments.length - 1 ? "" : ","
-        }`;
+      }`;
     });
     content += `): ${method.type} {
-    throw new Error('${method.name} not implemented in class ${name}Controller');
+    throw new Error('${
+      method.name
+    } not implemented in class ${name}Controller');
     return null;
   }
     `;
@@ -234,14 +243,14 @@ export interface IWriteBusiness<T> {
 
 export const generateBusinessInterfaceContent = async (business: Business) => {
   const name: string = business.name;
-  let content:  string = `
+  let content: string = `
 import { IBaseBusiness } from './BaseBusiness';
 import { I${name} } from './../../models/interfaces/I${name}';
 
 export interface I${name}Business extends IBaseBusiness<I${name}> {}
   `;
   return content;
-}
+};
 
 export const generateBusinessContent = async (business: Business) => {
   const name: string = business.name;
@@ -273,44 +282,56 @@ export class ${name}Business implements I${name}Business {
   }
   
   async retrieve(): Promise<Array<I${name}>> {
-    const ${toCamelCase(name)}s: Array<I${name}> = await this._${toCamelCase(name)}Repository.retrieve();
+    const ${toCamelCase(name)}s: Array<I${name}> = await this._${toCamelCase(
+    name
+  )}Repository.retrieve();
     return ${toCamelCase(name)}s;
   }
   
   async update(_id: string, item: I${name}): Promise<I${name}> {
-    const ${toCamelCase(name)} = await this._${toCamelCase(name)}Repository.findById(_id);
+    const ${toCamelCase(name)} = await this._${toCamelCase(
+    name
+  )}Repository.findById(_id);
     this.throwIfNotExists(${toCamelCase(name)});
-    const updated${toCamelCase(name)}: I${name} = await this._${toCamelCase(name)}Repository.update(${toCamelCase(name)}._id, item);
+    const updated${toCamelCase(name)}: I${name} = await this._${toCamelCase(
+    name
+  )}Repository.update(${toCamelCase(name)}._id, item);
     return updated${toCamelCase(name)};
   }
 
   async delete(_id: string): Promise<boolean> {
-    this.throwIfNotExists(await this._${toCamelCase(name)}Repository.delete(_id));
+    this.throwIfNotExists(await this._${toCamelCase(
+      name
+    )}Repository.delete(_id));
     return true;
   }
   
   async findById(_id: string): Promise<I${name}> {
-    const ${toCamelCase(name)}: I${name} = await this._${toCamelCase(name)}Repository.findById(_id);
+    const ${toCamelCase(name)}: I${name} = await this._${toCamelCase(
+    name
+  )}Repository.findById(_id);
     this.throwIfNotExists(${toCamelCase(name)});
     return ${toCamelCase(name)};
   }
   
-  throwIfNotExists(item: I${name}) {
+  public throwIfNotExists(item: I${name}) {
     if (!item) {
       throw { message: '${name} not found', code: 404 };
     }
-  }
+  }\n
   `;
-  
+
   business.methods.forEach((method: Method) => {
     content += `${method.accesor} ${method.name}(`;
     method.arguments.forEach((argument: Argument, index: number) => {
       content += `${index == 0 ? "" : " "}${argument.name}: ${argument.type}${
         index === method.arguments.length - 1 ? "" : ","
-        }`;
+      }`;
     });
     content += `): ${method.type} {
-    throw new Error('${method.name} not implemented in class ${name}Controller');
+    throw new Error('${
+      method.name
+    } not implemented in class ${name}Controller');
     return null;
   }
     `;
@@ -318,14 +339,14 @@ export class ${name}Business implements I${name}Business {
   content += `
 }\n`;
   return content;
-}
+};
 
 export const generateBaseRepositoryContent = async () => `
 import { Document, Model } from 'mongoose';
 import { IReadRepository } from '../interfaces/ReadRepository';
 import { IWriteRepository } from '../interfaces/WriteRepository';
 
-export abstract class RepositoryBase<T extends Document> implements IRead<T>, IWrite<T> {
+export abstract class RepositoryBase<T extends Document> implements IReadRepository<T>, IWriteRepository<T> {
   protected _model: Model<Document>;
 
   constructor(schemaModel: Model<Document>) {
@@ -438,16 +459,18 @@ import { ${name}Schema } from '..data-access/schemas/${name}Schema';`;
     super(${name}Schema);
   }
   `;
-  
+
   repository.methods.forEach((method: Method) => {
     content += `${method.accesor} ${method.name}(`;
     method.arguments.forEach((argument: Argument, index: number) => {
       content += `${index == 0 ? "" : " "}${argument.name}: ${argument.type}${
         index === method.arguments.length - 1 ? "" : ","
-        }`;
+      }`;
     });
     content += `): ${method.type} {
-    throw new Error('${method.name} not implemented in class ${name}Controller');
+    throw new Error('${
+      method.name
+    } not implemented in class ${name}Controller');
     return null;
   }
     `;
@@ -455,4 +478,4 @@ import { ${name}Schema } from '..data-access/schemas/${name}Schema';`;
   content += `
 }\n`;
   return content;
-}
+};
