@@ -8,24 +8,24 @@ import {
   ClassProperty,
   Business,
   Repository
-} from "./interfaces";
-import { toCamelCase } from "./utils";
+} from './interfaces';
+import { toCamelCase } from './utils';
 
 export const generateInterfaceContent = async (_interface: Interface) => {
-  let content: string = "";
+  let content: string = '';
   if (_interface.externalRefs.length > 0) {
     for (let externalRef of _interface.externalRefs) {
       content += `import { I${externalRef} } from './I${externalRef}';\n`;
     }
-    content += "\n";
+    content += '\n';
   }
   content += `export interface I${_interface.name} {\n`;
   _interface.properties.forEach((property: Property) => {
-    content += `\t${property.name}${property.required ? "" : "?"}: ${
+    content += `\t${property.name}${property.required ? '' : '?'}: ${
       property.type
     };\n`;
   });
-  content += "}\n";
+  content += '}\n';
   return content;
 };
 
@@ -37,7 +37,7 @@ export const generateClassContent = async (_class: Class) => {
     for (let extRef of _class.externalRefs) {
       content += `import { I${extRef} } from './interfaces/I${extRef}';\n`;
     }
-    content += "\n";
+    content += '\n';
   }
   content += `import { I${name} } from './interfaces/I${name}';\n\n`;
   content += `export class ${name} extends Document {\n\n\tprivate _${camelCaseName}: I${name};\n\n`;
@@ -50,8 +50,8 @@ export const generateClassContent = async (_class: Class) => {
   _class.methods.forEach((method: Method) => {
     content += `\t${method.accesor} ${method.name}(`;
     method.arguments.forEach((argument: Argument, index: number) => {
-      content += `${index == 0 ? "" : " "}${argument.name}: ${argument.type}${
-        index === method.arguments.length - 1 ? "" : ","
+      content += `${index == 0 ? '' : ' '}${argument.name}: ${argument.type}${
+        index === method.arguments.length - 1 ? '' : ','
       }`;
     });
     content += `): ${method.type} {
@@ -62,7 +62,7 @@ export const generateClassContent = async (_class: Class) => {
       }
         `;
   });
-  content += "}\n";
+  content += '}\n';
   return content;
 };
 
@@ -78,11 +78,7 @@ export function handleError(error, message: string, next: NextFunction) {
 `;
 
 export const generateBaseControllerContent = async () => `
-import { IBaseBusiness } from '../../businesses/interfaces/BaseBusiness';
-import { IWriteController } from './WriteController';
-import { IReadController } from './ReadController';
-  
-export interface IBaseController<T extends IBaseBusiness<Object>> extends IReadController, IWriteController {}
+
 `;
 
 export const generateReadControllerContent = async () => `
@@ -200,8 +196,8 @@ export class ${name}Controller implements IBaseController<${name}Business> {
   controller.methods.forEach((method: Method) => {
     content += `${method.accesor} ${method.name}(`;
     method.arguments.forEach((argument: Argument, index: number) => {
-      content += `${index == 0 ? "" : " "}${argument.name}: ${argument.type}${
-        index === method.arguments.length - 1 ? "" : ","
+      content += `${index == 0 ? '' : ' '}${argument.name}: ${argument.type}${
+        index === method.arguments.length - 1 ? '' : ','
       }`;
     });
     content += `): ${method.type} {
@@ -324,8 +320,8 @@ export class ${name}Business implements I${name}Business {
   business.methods.forEach((method: Method) => {
     content += `${method.accesor} ${method.name}(`;
     method.arguments.forEach((argument: Argument, index: number) => {
-      content += `${index == 0 ? "" : " "}${argument.name}: ${argument.type}${
-        index === method.arguments.length - 1 ? "" : ","
+      content += `${index == 0 ? '' : ' '}${argument.name}: ${argument.type}${
+        index === method.arguments.length - 1 ? '' : ','
       }`;
     });
     content += `): ${method.type} {
@@ -463,8 +459,8 @@ import { ${name}Schema } from '..data-access/schemas/${name}Schema';`;
   repository.methods.forEach((method: Method) => {
     content += `${method.accesor} ${method.name}(`;
     method.arguments.forEach((argument: Argument, index: number) => {
-      content += `${index == 0 ? "" : " "}${argument.name}: ${argument.type}${
-        index === method.arguments.length - 1 ? "" : ","
+      content += `${index == 0 ? '' : ' '}${argument.name}: ${argument.type}${
+        index === method.arguments.length - 1 ? '' : ','
       }`;
     });
     content += `): ${method.type} {

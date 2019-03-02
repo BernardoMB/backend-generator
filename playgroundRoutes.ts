@@ -1,10 +1,14 @@
-import { Router } from 'express';
+import { Router, Request, Response, NextFunction, RequestHandler } from 'express';
 
 const router = Router();
 
+interface IDummy {
+	name: string;
+}
+
 export class PlaygroundRoutes {
 
-	controller;
+	public controller: Controller<IDummy>;
 
 	constructor() {
 		this.controller = new Controller();
@@ -17,52 +21,63 @@ export class PlaygroundRoutes {
 	}
 }
 
-class BaseController {
-	business;
-	constructor(business) {
+interface IReadController<T> {
+	retieve: RequestHandler
+}
+
+interface IWriteController<T> {
+	create: RequestHandler
+}
+
+class BaseController<T> implements IReadController<T>, IWriteController<T> {
+	public business: Business<T>;
+	constructor(business: Business<T>) {
 		this.business = business;
 	}
-	async create(req, res) {
-		await this.business.create().then((result) => {
+	async create(request: Request, response: Response, next: NextFunction): Promise<void> {
+		await this.business.create().then((result: string) => {
 			console.log(result);
-			res.status(200).json({result});
-		}, (err) => {
-			console.log(err);
-			res.status(500).json({err});
+			response.status(200).json({result});
+		}, (error) => {
+			console.log(error);
+			response.status(500).json({error});
 		});
 	}
-}
-
-class Controller extends BaseController {
-	constructor() {
-		super(new Business);
+	async retieve(request: Request, response: Response, next: NextFunction): Promise<void> {
+		console.log('Esta funcion no hace nada');
 	}
 }
 
-class BaseBusiness {
-	repository;
-	constructor(repository) {
+class Controller<T> extends BaseController<T> {
+	constructor() {
+		super(new Business<T>());
+	}
+}
+
+class BaseBusiness<T> {
+	public repository: Repository<T>;
+	constructor(repository: Repository<T>) {
 		this.repository = repository;
 	}
-	async create() {
+	async create(): Promise<string> {
 		return await this.repository.create();
 	}
 }
 
-class Business extends BaseBusiness {
+class Business<T> extends BaseBusiness<T> {
 	constructor() {
-		super(new Repository());
+		super(new Repository<T>());
 	}
 }
 
-class RepositoryBase {
+class RepositoryBase<T> {
 	constructor() { }
-	async create() {
+	async create(): Promise<string> {
 		return 'creating';
 	}
 }
 
-class Repository extends RepositoryBase {
+class Repository<T> extends RepositoryBase<T> {
 	constructor() {
 		super();
 	}

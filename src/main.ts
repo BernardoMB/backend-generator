@@ -4,7 +4,7 @@ import { Model } from './interfaces';
 import { generateModel, generateGenericServerFiles } from './generators';
 import { outputCreatedFiles, asyncForEach } from './utils';
 
-const data: {models:Array<Model>} = JSON.parse(fs.readFileSync('models.json').toString());
+const data: { models: Array<Model> } = JSON.parse(fs.readFileSync('models.json').toString());
 
 const models: Array<Model> = data.models;
 
@@ -38,8 +38,8 @@ const generateModels = async (models: Array<Model>) => {
 }
 
 const generateBackEnd = async () => {
-	await generateServerFiles();
-	await generateModels(models);
+    await generateServerFiles();
+    await generateModels(models);
 }
 
 generateBackEnd();

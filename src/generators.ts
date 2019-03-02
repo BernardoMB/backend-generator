@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import {
   Model,
   Interface,
@@ -5,7 +6,7 @@ import {
   Controller,
   Business,
   Repository
-} from "./interfaces";
+} from './interfaces';
 import {
   writeModelInterface,
   writeModelClass,
@@ -15,8 +16,7 @@ import {
   writeControllerFiles,
   writeBusinessFiles,
   writeRepositoryFiles
-} from "./writers";
-import chalk from "chalk";
+} from './writers';
 
 // TODO: generate server.ts, middelwares.ts, api.ts, db files, schemas, data access files and the following files
 // Route files are also very important
@@ -40,7 +40,7 @@ export const generateGenericServerFiles = async () => {
     ];
     return files;
   } catch (error) {
-    const message = "Error generating generic server files";
+    const message = 'Error generating generic server files';
     throw new Error(chalk.redBright(message, error));
   }
 };
@@ -58,9 +58,9 @@ export const generateModel = async (model: Model) => {
     try {
       filePath = await writeModelInterface(_interface, model.flat);
       files.push(filePath);
-      console.log(chalk.magentaBright("Generated interface!"));
+      console.log(chalk.magentaBright('Generated interface!'));
     } catch (error) {
-      const message = "Error generating model interface";
+      const message = 'Error generating model interface';
       throw new Error(chalk.redBright(message, error));
     }
   }
@@ -74,9 +74,9 @@ export const generateModel = async (model: Model) => {
     try {
       filePath = await writeModelClass(_class, model.flat);
       files.push(filePath);
-      console.log(chalk.magentaBright("Generated model class!"));
+      console.log(chalk.magentaBright('Generated model class!'));
     } catch (error) {
-      const message = "Error generating model class";
+      const message = 'Error generating model class';
       throw new Error(chalk.redBright(message, error));
     }
   }
@@ -90,9 +90,9 @@ export const generateModel = async (model: Model) => {
     try {
       filePath = await writeModelController(controller, model.flat);
       files.push(filePath);
-      console.log(chalk.magentaBright("Generated model controller files!"));
+      console.log(chalk.magentaBright('Generated model controller files!'));
     } catch (error) {
-      const message = "Error generating model controller files";
+      const message = 'Error generating model controller files';
       throw new Error(chalk.redBright(message, error));
     }
   }
@@ -105,9 +105,9 @@ export const generateModel = async (model: Model) => {
     };
     try {
       files = [...files, ...(await writeModelBusiness(business, model.flat))];
-      console.log(chalk.magentaBright("Generated model business files!"));
+      console.log(chalk.magentaBright('Generated model business files!'));
     } catch (error) {
-			const message = "Error generating model business files";
+			const message = 'Error generating model business files';
 			throw new Error(chalk.redBright(message, error));
     }
   }
@@ -121,9 +121,9 @@ export const generateModel = async (model: Model) => {
 		try {
 			filePath = await writeModelRepository(repository, model.flat);
     	files.push(filePath);
-    	console.log(chalk.magentaBright("Generated model repository files!"));	
+    	console.log(chalk.magentaBright('Generated model repository files!'));	
 		} catch (error) {
-			const message = "Error generating model repository files files";
+			const message = 'Error generating model repository files files';
 			throw new Error(chalk.redBright(message, error));
 		}
   }

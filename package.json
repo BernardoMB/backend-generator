@@ -6,9 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "generate": "ts-node main.ts",
-    "clean": "concurrently \"rd /s /q server\"",
-    "test-generated-server": "ts-node ./server/server.ts",
-    "server-watch": "nodemon --ext \".ts\" --exec \"npm run test-generated-server\""
+    "clean": "rd /s /q server",
+    "test-server": "ts-node ./test-server/server.ts",
+    "test-server-watch": "nodemon --ext \".ts\" --exec \"npm run test-server\""
   },
   "repository": {
     "type": "git",
