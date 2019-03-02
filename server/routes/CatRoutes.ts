@@ -16,19 +16,15 @@ import { CatRepository } from '../repositories/CatRepository';
 const router = Router();
 
 export class CatRoutes {
-	private catRepository: CatRepository;
-	private catBussines: CatBusiness;
-  private _catController: CatController;
+
+	public _catController: CatController;
 
   constructor() {
-		this.catRepository = new CatRepository();
-		this.catBussines = new CatBusiness(this.catRepository);
-    this._catController = new CatController(this.catBussines);
-  }
+		this._catController = new CatController();	
+	}
 
   routes(): Router {
-    const controller = this._catController;
-    router.post('', controller.create);
+    router.post('', this._catController.create);
     return router;
   }
 }

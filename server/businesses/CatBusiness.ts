@@ -10,8 +10,8 @@ export class CatBusiness extends BaseBusiness{
     
   private myProperty2: Array<IPerson>;
     
-  constructor(catRepository: CatRepository) {
-		super(catRepository);
+  constructor() {
+		super(new CatRepository());
   }
 
   /* async create(item: ICat): Promise<ICat> {

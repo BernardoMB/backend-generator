@@ -10,8 +10,8 @@ export class CatController extends BaseController /* implements IBaseController<
     
 	private myProperty2: Array<IPerson>;
 
-	constructor(catBusiness: CatBusiness) {
-		super(catBusiness);
+	constructor() {
+		super(new CatBusiness());
 	}
     
   /* public async create(request: Request, response: Response, next: NextFunction): Promise<void> {

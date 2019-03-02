@@ -2,18 +2,24 @@
 import { Document, Model } from 'mongoose';
 import { IReadRepository } from '../interfaces/ReadRepository';
 import { IWriteRepository } from '../interfaces/WriteRepository';
+import chalk from 'chalk';
 
 // TODO: Implement interfaces.
 
-export abstract class BaseRepository<T extends Document> /*  implements IReadRepository<T>, IWriteRepository<T> */ {
+export class BaseRepository<T extends Document> /*  implements IReadRepository<T>, IWriteRepository<T> */ {
 	
-	protected _model: Model<Document>;
+	public _model: Model<Document>;
 
   constructor(schemaModel: Model<Document>) {
     this._model = schemaModel;
-  }
+	}
+	
+	create() {
+		const message = chalk.yellow('Found gold');
+		return console.log(message);
+	}
 
-  async create(item: T): Promise<T> {
+  /* async create(item: T): Promise<T> {
     return <T>await this._model.create(item);
   }
 
@@ -71,5 +77,5 @@ export abstract class BaseRepository<T extends Document> /*  implements IReadRep
 
   async drop() {
     return this._model.deleteMany({}).exec();
-  }
+  } */
 }

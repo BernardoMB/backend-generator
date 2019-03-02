@@ -1,6 +1,3 @@
-
-import { RepositoryBase } from './interfaces/BaseRepository';
-import { ICat } from '../models/interfaces/ICat';
 import { BaseRepository } from './base/BaseRepository';
 import { catSchema } from '../data-access/schemas/CatSchema';
 

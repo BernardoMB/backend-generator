@@ -9,7 +9,8 @@ function listen(): Promise<express.Express> {
   //Initialize all API routes
   Api.initialize(app);
   //Get environment variables
-  const port = process.env.PORT;
+  /* const port = process.env.PORT; */
+  const port = 3000;
   return new Promise((resolve, reject) => {
     app.listen(port, err => {
       if (err) reject(err);

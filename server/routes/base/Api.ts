@@ -7,10 +7,11 @@ import * as applicationInsights from 'applicationinsights';
 import { join } from 'path';
 
 import { ErrorHandler } from '../middlewares/handlers/ErrorHandler';
-import { loggerFactory } from './../../config/winston'; 
+/* import { loggerFactory } from './../../config/winston';  */
 
 // TODO: Generate code here
 import { CatRoutes } from '../CatRoutes';
+import { PlaygroundRoutes } from '../../../playgroundRoutes';
 
 const DOC_PATH = join(__dirname, '../../../documentation');
 
@@ -24,8 +25,8 @@ export class Api {
     //Documentation routes
     app.use(express.static(DOC_PATH));
     //Ligger
-    app.use(morgan('correlationId=:req[correlationId] remote-addr=:remote-addr url=:url method=:method', { immediate: true, stream: { write: message => loggerFactory().info(message)}}));
-    app.use(morgan('correlationId=:req[correlationId] remote-addr=:remote-addr url=:url method=:method status=:status responseTime=:response-time[digits]', { stream: { write: message => loggerFactory().info(message)}}));
+    /* app.use(morgan('correlationId=:req[correlationId] remote-addr=:remote-addr url=:url method=:method', { immediate: true, stream: { write: message => loggerFactory().info(message)}})); */
+    /* app.use(morgan('correlationId=:req[correlationId] remote-addr=:remote-addr url=:url method=:method status=:status responseTime=:response-time[digits]', { stream: { write: message => loggerFactory().info(message)}})); */
     app.get('/docs', (req, res) => res.sendFile(`${DOC_PATH}/index.html`));
     //Log incomming requests
     //if (process.env.NODE_ENV !== 'test') app.use(morgan('dev'));
@@ -35,7 +36,8 @@ export class Api {
     }
     app.use(expressValidator());
     //Application routes
-		app.use('/api/cat', new CatRoutes().routes());
+		/* app.use('/api/cat', new CatRoutes().routes()); */
+		app.use('/api/cat', new PlaygroundRoutes().routes());
 		//Middleware to handle all error messages
     app.use(ErrorHandler);
   }

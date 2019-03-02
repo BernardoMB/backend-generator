@@ -1,16 +1,21 @@
 import { Request, Response, NextFunction } from 'express';
 import { handleError } from './../helps/handle-error';
-import { BaseBusiness } from '../../businesses/base/BaseBusiness';
 
-export abstract class BaseController {
-
-	protected _business: BaseBusiness;
-
-	constructor(business: BaseBusiness) {
-		this._business = business;
+export class BaseController {
+	
+	business;
+	
+	constructor(business) {
+		this.business = business;
 	}
 
-	public async create(request: Request, response: Response, next: NextFunction): Promise<void> {
+	async create(request: Request, response: Response, next: NextFunction) {
+		await this.business.create();
+		const message = 'Lo que sea porque ya estoy hasta la madre';
+		response.status(200).json({ message });
+	}
+
+	/* public async create(request: Request, response: Response, next: NextFunction): Promise<void> {
     try {
 			// TODO: Cast request body with generic type.		
 			const item = request.body;
@@ -30,7 +35,7 @@ export abstract class BaseController {
     } catch (error) {
       handleError(error, 'Error retrieving cats', next);
     }
-  }
+  } */
 
 
 	// TODO: update methods below

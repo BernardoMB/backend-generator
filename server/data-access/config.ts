@@ -19,13 +19,15 @@ export class Db {
         connection = await Mongoose.connect(
 					db,
 					// WARNING: Database authentication not implemented
-          /* { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true, user: 'newt', pass: 'mimaamakim' } */
-        );
-      } else {
-        connection = await Mongoose.connect(
-					db,
-					// WARNING: Database authentication not implemented
-          /* { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true } */
+					/* { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true, user: 'newt', pass: 'mimaamakim' } */
+					{ useNewUrlParser: true }
+					);
+				} else {
+					connection = await Mongoose.connect(
+						db,
+						// WARNING: Database authentication not implemented
+						/* { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true } */
+						{ useNewUrlParser: true }
         );
       }
       console.log(`Running on environment: \x1b[34m${process.env.NODE_ENV}\x1b[0m`);
