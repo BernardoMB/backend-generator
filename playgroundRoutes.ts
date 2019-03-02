@@ -6,14 +6,15 @@ export class PlaygroundRoutes {
 
 	controller;
 
-  constructor() {
-		this.controller = new Controller();	
+	constructor() {
+		this.controller = new Controller();
 	}
 
-  routes(): Router {
-    router.post('', this.controller.create);
-    return router;
-  }
+	routes(): Router {
+		const controller = this.controller;
+		router.post('', controller.create.bind(controller));
+		return router;
+	}
 }
 
 class BaseController {
@@ -21,25 +22,24 @@ class BaseController {
 	constructor(business) {
 		this.business = business;
 	}
-	create(req, res) {
-		this.business.create().then((res) => {
-			console.log(res);
-			//const message = 'Hola';
-			res.status(200).json({res});
+	async create(req, res) {
+		await this.business.create().then((result) => {
+			console.log(result);
+			res.status(200).json({result});
 		}, (err) => {
 			console.log(err);
-			res.status(500);
+			res.status(500).json({err});
 		});
 	}
 }
 
 class Controller extends BaseController {
 	constructor() {
-		super(new Business());
+		super(new Business);
 	}
 }
 
-class BaseBsusiness {
+class BaseBusiness {
 	repository;
 	constructor(repository) {
 		this.repository = repository;
@@ -49,14 +49,14 @@ class BaseBsusiness {
 	}
 }
 
-class Business extends BaseBsusiness {
+class Business extends BaseBusiness {
 	constructor() {
 		super(new Repository());
 	}
 }
 
 class RepositoryBase {
-	constructor() {}
+	constructor() { }
 	async create() {
 		return 'creating';
 	}

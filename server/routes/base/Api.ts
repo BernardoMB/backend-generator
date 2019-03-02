@@ -37,7 +37,7 @@ export class Api {
     app.use(expressValidator());
     //Application routes
 		/* app.use('/api/cat', new CatRoutes().routes()); */
-		app.use('/api/cat', new PlaygroundRoutes().routes());
+		app.use('/api/cat', (new PlaygroundRoutes()).routes());
 		//Middleware to handle all error messages
     app.use(ErrorHandler);
   }
