@@ -18,6 +18,18 @@ import {
 } from "./writers";
 import chalk from "chalk";
 
+// TODO: generate server.ts, middelwares.ts, api.ts, db files, schemas, data access files and the following files
+// Route files are also very important
+// Config folder in server root
+// Generate Schemas and new stuff.
+/**
+ * import { ErrorHandler } from '../middlewares/handlers/ErrorHandler';
+import { ProductRoutes } from '../ProductRoutes';
+import { PurchaseRoutes } from '../PurchaseRoutes';
+import { BalanceRoutes } from '../BalanceRoutes';
+import { UserRoutes } from '../UserRoutes';
+import { loggerFactory } from './../../config/winston'; 
+ */
 export const generateGenericServerFiles = async () => {
   let files: Array<string> = [];
   try {
