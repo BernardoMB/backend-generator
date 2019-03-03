@@ -12,7 +12,7 @@ export class Db {
   async connect() {
     try {
 			//const db = process.env.DB;
-			const dbName = 'morpheus'
+			const dbName = 'backend-generator';
       const db = `mongodb://localhost/${dbName}`;
       let connection: typeof Mongoose;
       if (this.auth) {
@@ -41,7 +41,7 @@ export class Db {
   async disconnect() {
     try {
       //const db = process.env.DB;
-			const dbName = 'morpheus'
+			const dbName = 'backend-generator';
       const db = `mongodb://localhost/${dbName}`;
       console.log(`Disconnected from db: \x1b[34m${db}\x1b[0m`);
     } catch (e) {

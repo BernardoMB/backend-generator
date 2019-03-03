@@ -66,7 +66,8 @@ export const generateClassContent = async (_class: Class) => {
   return content;
 };
 
-export const generateHandleErrorContent = async () => `
+export const generateHandleErrorContent = async () => {
+  return `
 import { NextFunction } from 'express';
 
 export function handleError(error, message: string, next: NextFunction) {
@@ -75,92 +76,53 @@ export function handleError(error, message: string, next: NextFunction) {
     code: !!error.code ? error.code : 500
   });
 }
-`;
-
-export const generateBaseControllerContent = async () => `
-
-`;
-
-export const generateReadControllerContent = async () => `
-import { RequestHandler } from 'express';
-
-export interface IReadController {
-    retrieve: RequestHandler;
-    findById: RequestHandler;
-}
-`;
-
-export const generateWriteControllerContent = async () => `
-import { RequestHandler } from 'express';
-
-export interface IWriteController {
-    create: RequestHandler;
-    update: RequestHandler;
-    delete: RequestHandler;
-}
-`;
-
-export const generateControllerContent = async (controller: Controller) => {
-  const name: string = controller.name;
-  let content: string = `
-import { Request, Response, NextFunction } from 'express';
-import { handleError } from './helps/handle-error';
-import { IBaseController } from './interfaces/BaseController';
-import { ${name}Business } from '../businesses/${name}Business';
-import { I${name} } from './../models/interfaces/I${name}';\n`;
-  controller.externalRefs.forEach((externalRef: string) => {
-    content += `import { I${externalRef} } from './../models/interfaces/I${externalRef}';
-    `;
-  });
-  content += `
-export class ${name}Controller implements IBaseController<${name}Business> {
   `;
-  controller.properties.forEach((property: ClassProperty) => {
-    content += `
-  ${property.accesor} ${property.name}: ${property.type};
-    `;
-  });
-  content += `
-  public async create(request: Request, response: Response, next: NextFunction): Promise<void> {
-    try {
-      const ${toCamelCase(name)}: I${name} = <I${name}>request.body;
-      const ${toCamelCase(name)}Business = new ${name}Business();
-      const created${name}: I${name} = await ${toCamelCase(
-    name
-  )}Business.create(${toCamelCase(name)});
-      response.status(200).json({ ${toCamelCase(name)}: created${name} });
-    } catch (error) {
-      handleError(error, 'Error creating ${toCamelCase(name)}', next);
-    }
+}
+
+export const generateBaseControllerContent = async () => {
+  return `
+import { Request, Response, NextFunction } from 'express';
+import { handleError } from './../helps/handle-error';
+import { IReadController } from '../interfaces/IReadController';
+import { IWriteController } from '../interfaces/IWriteController';
+
+export class BaseController<T> implements IReadController<T>, IWriteController<T> {
+  
+  public _business;
+  
+  constructor(business) {
+    this._business = business;
   }
 
-  public async retrieve(request: Request, response: Response, next: NextFunction): Promise<void> {
+  async create(request: Request, response: Response, next: NextFunction): Promise<void> {
     try {
-      const ${toCamelCase(name)}Business = new ${name}Business();
-      const ${toCamelCase(name)}s: Array<I${name}> = await ${toCamelCase(
-    name
-  )}Business.retrieve();
-      response.status(200).json({ ${toCamelCase(name)}s: ${toCamelCase(
-    name
-  )}s });
+      const item: T = <T>request.body;
+      const createdItem: T = await this._business.create(item);
+      response.status(201).json({ item: createdItem });
     } catch (error) {
-      handleError(error, 'Error retrieving ${toCamelCase(name)}s', next);
+      handleError(error, 'Error creating item', next);
+    }
+  }
+  
+  public async read(request: Request, response: Response, next: NextFunction): Promise<void> {
+    try {
+      const items: Array<T> = await this._business.read();
+      response.status(200).json({ items });
+    } catch (error) {
+      handleError(error, 'Error retrieving cats', next);
     }
   }
 
   public async update(request: Request, response: Response, next: NextFunction): Promise<void> {
     try {
-      const new${name}: I${name} = <I${name}>request.body;
+      const newItem: T = <T>request.body;
       const {
         params: { id }
       } = request;
-      const ${toCamelCase(name)}Business = new ${name}Business();
-      const updated${name}: I${name} = await ${toCamelCase(
-    name
-  )}Business.update(id, new${name});
-      response.status(201).json({ ${toCamelCase(name)}: updated${name} });
+      const updatedItem: T = await this._business.update(id, newItem);
+      response.status(202).json({ item: updatedItem });
     } catch (error) {
-      handleError(error, ' Error updating ${toCamelCase(name)}', next);
+      handleError(error, ' Error updating cat', next);
     }
   }
 
@@ -169,11 +131,10 @@ export class ${name}Controller implements IBaseController<${name}Business> {
       const {
         params: { id }
       } = request;
-      const ${toCamelCase(name)}Business = new ${name}Business();
-      await ${toCamelCase(name)}Business.delete(id);
+      await this._business.delete(id);
       response.status(200).json({ id });
     } catch (error) {
-      handleError(error, ' Error deleting ${toCamelCase(name)}', next);
+      handleError(error, ' Error deleting cat', next);
     }
   }
 
@@ -182,17 +143,64 @@ export class ${name}Controller implements IBaseController<${name}Business> {
       const {
         params: { id }
       } = request;
-      const ${toCamelCase(name)}Business = new ${name}Business();
-      const ${toCamelCase(name)}: I${name} = await ${toCamelCase(
-    name
-  )}Business.findById(id);
-      response.status(200).json({ ${toCamelCase(name)}: ${toCamelCase(name)} });
+      const item: T = await this._business.findById(id);
+      response.status(200).json({ item });
     } catch (error) {
-      handleError(error, 'Error finding ${toCamelCase(name)}', next);
+      handleError(error, 'Error finding cat', next);
     }
-  }\n
-  `;
+  }
 
+}
+  `;
+}
+
+export const generateIReadControllerContent = async () => {
+  return `
+import { RequestHandler } from 'express';
+
+export interface IReadController<T> {
+    read: RequestHandler,
+    findById: RequestHandler
+}
+  `;
+}
+
+export const generateIWriteControllerContent = async () => {
+  return `
+import { RequestHandler } from 'express';
+
+export interface IWriteController<T> {
+    create: RequestHandler,
+    update: RequestHandler,
+    delete: RequestHandler
+}
+  `;
+}
+
+export const generateControllerContent = async (controller: Controller) => {
+  const name: string = controller.name;
+  let content: string = `
+import { BaseController } from './base/BaseController';
+import { ${name}Business } from '../businesses/${name}Business';
+import { I${name} } from '../models/interfaces/I${name}';\n`;
+  controller.externalRefs.forEach((externalRef: string) => {
+    content += `import { I${externalRef} } from './../models/interfaces/I${externalRef}';
+    `;
+  });
+  content += `
+export class ${name}Controller extends BaseController<I${name}> {
+  `;
+  controller.properties.forEach((property: ClassProperty) => {
+    content += `
+  ${property.accesor} ${property.name}: ${property.type};
+    `;
+  });
+  content += `
+  constructor() {
+    super(new ${name}());
+  }
+  \n
+  `;
   controller.methods.forEach((method: Method) => {
     content += `${method.accesor} ${method.name}(`;
     method.arguments.forEach((argument: Argument, index: number) => {
@@ -213,53 +221,88 @@ export class ${name}Controller implements IBaseController<${name}Business> {
   return content;
 };
 
-export const generateBaseBusinessContent = async () => `
-import { IReadBusiness } from './ReadBusiness';
-import { IWriteBusiness } from './WriteBusiness';
+export const generateBaseBusinessContent = async () => {
+  return `
+import { IReadBusiness } from "../interfaces/IReadBusiness";
+import { IWriteBusiness } from "../interfaces/IWriteBusiness";
 
-export interface IBaseBusiness<T> extends IReadBusiness<T>, IWriteBusiness<T> {
-  throwIfNotExists?: (item: T) => void;
+export class BaseBusiness<T> implements IReadBusiness<T>, IWriteBusiness<T> {
+  
+  public _repository;
+  
+  constructor(repository) {
+    this._repository = repository;
+  }
+  
+  async create(item: T): Promise<T> {
+    const createdItem: T = await this._repository.create(item);
+    return createdItem;
+  }
+  
+  async read(): Promise<Array<T>> {
+    const items: Array<T> = await this._repository.read();
+    return items;
+  }
+  
+  async update(_id: string, item: T): Promise<T> {
+    const itemToBeUpdated: T = await this._repository.findById(_id);
+    this.throwIfNotExists(itemToBeUpdated);
+    const updatedItem: T = await this._repository.update((<any>itemToBeUpdated)._id, item);
+    return updatedItem;
+  }
+
+  async delete(_id: string): Promise<boolean> {
+    this.throwIfNotExists(await this._repository.delete(_id));
+    return true;
+  }
+  
+  async findById(_id: string): Promise<T> {
+    const item: T = await this._repository.findById(_id);
+    this.throwIfNotExists(item);
+    return item;
+  }
+  
+  public throwIfNotExists(item: T) {
+    if (!item) {
+      throw { message: 'Item not found', code: 404 };
+    }
+  }
+  
 }
-`;
-
-export const generateReadBusinessContent = async () => `
-export interface IReadBusiness<T> {
-  retrieve: () => Promise<T[]>;
-  findById: (id: string) => Promise<T>;
-}
-`;
-
-export const generateWriteBusinessContent = async () => `
-export interface IWriteBusiness<T> {
-  create: (item: T, callback: (error: any, result: T ) => void) => void;
-  update: (_id: string, item: T, callback: (error: any, result: T) => void) => void ;
-  delete: (_id: string, callback: (error: any, result: string) => void) => void;
-}
-`;
-
-export const generateBusinessInterfaceContent = async (business: Business) => {
-  const name: string = business.name;
-  let content: string = `
-import { IBaseBusiness } from './BaseBusiness';
-import { I${name} } from './../../models/interfaces/I${name}';
-
-export interface I${name}Business extends IBaseBusiness<I${name}> {}
   `;
-  return content;
-};
+}
+
+export const generateIReadBusinessContent = async () => {
+  return `
+export interface IReadBusiness<T> {
+  create(item: T): Promise<T>,
+  update(_id: string, item: T): Promise<T>,
+  delete(_id: string): Promise<boolean>
+}  
+  `;
+}
+
+export const generateIWriteBusinessContent = async () => {
+  return `
+export interface IWriteBusiness<T> {
+  read(): Promise<Array<T>>,
+  findById(_id: string): Promise<T>
+}
+  `;
+}
 
 export const generateBusinessContent = async (business: Business) => {
   const name: string = business.name;
   let content: string = `
 import { ${name}Repository } from '../repositories/${name}Repository';
-import { I${name}Business } from './interfaces/I${name}Business';
-import { I${name} } from '../models/interfaces/I${name}';\n`;
+import { I${name} } from '../models/interfaces/I${name}';
+import { BaseBusiness } from './base/BaseBusiness';\n`;
   business.externalRefs.forEach((externalRef: string) => {
     content += `import { I${externalRef} } from './../models/interfaces/I${externalRef}';
     `;
   });
   content += `
-export class ${name}Business implements I${name}Business {
+export class ${name}Business extends BaseBusiness<I${name}> {
   `;
   business.properties.forEach((property: ClassProperty) => {
     content += `
@@ -267,56 +310,10 @@ export class ${name}Business implements I${name}Business {
     `;
   });
   content += `
-  private _${toCamelCase(name)}Repository: ${name}Repository;
-  
   constructor() {
-    this._${toCamelCase(name)}Repository = new ${name}Repository();
-  }
-
-  async create(item: I${name}): Promise<I${name}> {
-    return await this._${toCamelCase(name)}Repository.create(item);
-  }
-  
-  async retrieve(): Promise<Array<I${name}>> {
-    const ${toCamelCase(name)}s: Array<I${name}> = await this._${toCamelCase(
-    name
-  )}Repository.retrieve();
-    return ${toCamelCase(name)}s;
-  }
-  
-  async update(_id: string, item: I${name}): Promise<I${name}> {
-    const ${toCamelCase(name)} = await this._${toCamelCase(
-    name
-  )}Repository.findById(_id);
-    this.throwIfNotExists(${toCamelCase(name)});
-    const updated${toCamelCase(name)}: I${name} = await this._${toCamelCase(
-    name
-  )}Repository.update(${toCamelCase(name)}._id, item);
-    return updated${toCamelCase(name)};
-  }
-
-  async delete(_id: string): Promise<boolean> {
-    this.throwIfNotExists(await this._${toCamelCase(
-      name
-    )}Repository.delete(_id));
-    return true;
-  }
-  
-  async findById(_id: string): Promise<I${name}> {
-    const ${toCamelCase(name)}: I${name} = await this._${toCamelCase(
-    name
-  )}Repository.findById(_id);
-    this.throwIfNotExists(${toCamelCase(name)});
-    return ${toCamelCase(name)};
-  }
-  
-  public throwIfNotExists(item: I${name}) {
-    if (!item) {
-      throw { message: '${name} not found', code: 404 };
-    }
+    super(new ${name}Repository());
   }\n
   `;
-
   business.methods.forEach((method: Method) => {
     content += `${method.accesor} ${method.name}(`;
     method.arguments.forEach((argument: Argument, index: number) => {
@@ -337,13 +334,15 @@ export class ${name}Business implements I${name}Business {
   return content;
 };
 
-export const generateBaseRepositoryContent = async () => `
+export const generateBaseRepositoryContent = async () => {
+  return `
 import { Document, Model } from 'mongoose';
-import { IReadRepository } from '../interfaces/ReadRepository';
-import { IWriteRepository } from '../interfaces/WriteRepository';
+import { IReadRepository } from '../interfaces/IReadRepository';
+import { IWriteRepository } from '../interfaces/IWriteRepository';
 
-export abstract class RepositoryBase<T extends Document> implements IReadRepository<T>, IWriteRepository<T> {
-  protected _model: Model<Document>;
+export class BaseRepository<T extends Document> implements IReadRepository<T>, IWriteRepository<T> {
+
+  public _model: Model<Document>;
 
   constructor(schemaModel: Model<Document>) {
     this._model = schemaModel;
@@ -357,7 +356,7 @@ export abstract class RepositoryBase<T extends Document> implements IReadReposit
     return <T[]>await this._model.insertMany(items);
   }
 
-  async retrieve(): Promise<T[]> {
+  async read(): Promise<T[]> {
     return <T[]>await this._model.find({}).exec();
   }
 
@@ -408,42 +407,49 @@ export abstract class RepositoryBase<T extends Document> implements IReadReposit
   async drop() {
     return this._model.deleteMany({}).exec();
   }
-}
-`;
 
-export const generateReadRepositoryContent = async () => `
+}  
+  `;
+}
+
+export const generateIReadRepositoryContent = async () => {
+  return `
 export interface IReadRepository<T> {
-  retrieve: () => Promise<T[]>;
-  retrieveBy: (conditions: any, projection?: any | null, options?: any | null) => Promise<T[]>;
-  find: (conditions: any, projections?: string, options?: any) => Promise<T[]>;
-  findOne: (conditions: any, projections?: string, options?: any) => Promise<T>;
-  findById: (id: string) => Promise<T>;
+  read(): Promise<T[]>,
+  retrieveBy(conditions: any, projection?: any | null, options?: any | null): Promise<T[]>,
+  findById(_id: string): Promise<T>,
+  find(conditions: any, projections?: string, options?: any): Promise<T[]>,
+  findOne(conditions: any, projections?: string, options?: any): Promise<T>
 }
-`;
-export const generateWriteRepositoryContent = async () => `
+  `;
+}
+
+export const generateIWriteRepositoryContent = async () => {
+  return `
 export interface IWriteRepository<T> {
-  create: (item: T) => Promise<T>;
-  createMany: (items: T[]) => Promise<T[]>;
-  update: (_id: string, item: T) => Promise<T>;
-  updateMany: (conditions: any, item: T, options?: any | null) => Promise<T[]>;
-  delete: (_id: string) => Promise<T>;
-  deleteMany: (condition: any) => Promise<any>;
-  drop: () => Promise<any>;
+  create(item: T): Promise<T>,
+  createMany(items: T[]): Promise<T[]>,
+  update(_id: string, item: T): Promise<T>,
+  updateMany(conditions: any, item: T, options?: any | null): Promise<T[]>,
+  delete(_id: string): Promise<T>,
+  deleteMany(condition: any): Promise<any>,
+  drop(): Promise<any>
 }
-`;
+  `;
+}
 
 export const generateRepositoryContent = async (repository: Repository) => {
   const name: string = repository.name;
   let content: string = `
-import { RepositoryBase } from './interfaces/BaseRepository';
-import { I${name} } from '../models/interfaces/I${name}';
-import { ${name}Schema } from '..data-access/schemas/${name}Schema';`;
+import { BaseRepository } from './base/BaseRepository';
+import { ${toCamelCase(name)}Schema } from '..data-access/schemas/${name}Schema';
+import { I${name} } from '../models/interfaces/I${name}';`;
   repository.externalRefs.forEach((externalRef: string) => {
-    content += `import { I${externalRef} } from './../model/interfaces/I${externalRef}';
+    content += `import { I${externalRef} } from './../models/interfaces/I${externalRef}';
     `;
   });
   content += `
-\nexport class ${name}Repository extends RepositoryBase<I${name}> {
+\nexport class ${name}Repository extends BaseRepository<I${name}> {
   `;
   repository.properties.forEach((property: ClassProperty) => {
     content += `
@@ -452,10 +458,9 @@ import { ${name}Schema } from '..data-access/schemas/${name}Schema';`;
   });
   content += `
   constructor() {
-    super(${name}Schema);
+    super(${toCamelCase(name)}Schema);
   }
   `;
-
   repository.methods.forEach((method: Method) => {
     content += `${method.accesor} ${method.name}(`;
     method.arguments.forEach((argument: Argument, index: number) => {

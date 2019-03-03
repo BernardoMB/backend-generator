@@ -13,7 +13,7 @@ import { AuthenticateAdmin } from './middlewares/authenticators/AdminAuthenticat
 import { CatBusiness } from '../businesses/CatBusiness';
 import { CatRepository } from '../repositories/CatRepository';
 
-const router = Router();
+const router: Router = Router();
 
 export class CatRoutes {
 
@@ -24,7 +24,12 @@ export class CatRoutes {
 	}
 
   routes(): Router {
-    router.post('', this._catController.create);
+    const controller = this._catController;
+    router.post('', controller.create.bind(controller));
+    router.get('', controller.read.bind(controller));
+    router.put('', controller.update.bind(controller));
+    router.delete('', controller.delete.bind(controller));
+    router.get('/:id', controller.findById.bind(controller));
     return router;
   }
 }

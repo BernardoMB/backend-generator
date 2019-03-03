@@ -1,55 +1,43 @@
 import { Request, Response, NextFunction } from 'express';
 import { handleError } from './../helps/handle-error';
+import { IReadController } from '../interfaces/IReadController';
+import { IWriteController } from '../interfaces/IWriteController';
 
-export class BaseController {
+export class BaseController<T> implements IReadController<T>, IWriteController<T> {
 	
-	business;
-	
+  public _business;
+  
 	constructor(business) {
-		this.business = business;
+		this._business = business;
 	}
 
-	async create(request: Request, response: Response, next: NextFunction) {
-		await this.business.create();
-		const message = 'Lo que sea porque ya estoy hasta la madre';
-		response.status(200).json({ message });
-	}
-
-	/* public async create(request: Request, response: Response, next: NextFunction): Promise<void> {
+	async create(request: Request, response: Response, next: NextFunction): Promise<void> {
     try {
-			// TODO: Cast request body with generic type.		
-			const item = request.body;
-			// TODO: specifiy type of created item.
-      const createdItem = await this._business.create(item);
-      response.status(200).json({ item: createdItem });
+      const item: T = <T>request.body;
+      const createdItem: T = await this._business.create(item);
+      response.status(201).json({ item: createdItem });
     } catch (error) {
       handleError(error, 'Error creating item', next);
     }
-  }
-
-  public async retrieve(request: Request, response: Response, next: NextFunction): Promise<void> {
+	}
+  
+  public async read(request: Request, response: Response, next: NextFunction): Promise<void> {
     try {
-			// TODO: specifiy type of items.
-			const items = await this._business.retrieve();
+			const items: Array<T> = await this._business.read();
       response.status(200).json({ items });
     } catch (error) {
       handleError(error, 'Error retrieving cats', next);
     }
-  } */
+  }
 
-
-	// TODO: update methods below
-
-
-  /* public async update(request: Request, response: Response, next: NextFunction): Promise<void> {
+  public async update(request: Request, response: Response, next: NextFunction): Promise<void> {
     try {
-      const newCat: ICat = <ICat>request.body;
+      const newItem: T = <T>request.body;
       const {
         params: { id }
       } = request;
-      const catBusiness = new CatBusiness();
-      const updatedCat: ICat = await catBusiness.update(id, newCat);
-      response.status(201).json({ cat: updatedCat });
+      const updatedItem: T = await this._business.update(id, newItem);
+      response.status(202).json({ item: updatedItem });
     } catch (error) {
       handleError(error, ' Error updating cat', next);
     }
@@ -60,8 +48,7 @@ export class BaseController {
       const {
         params: { id }
       } = request;
-      const catBusiness = new CatBusiness();
-      await catBusiness.delete(id);
+      await this._business.delete(id);
       response.status(200).json({ id });
     } catch (error) {
       handleError(error, ' Error deleting cat', next);
@@ -73,16 +60,11 @@ export class BaseController {
       const {
         params: { id }
       } = request;
-      const catBusiness = new CatBusiness();
-      const cat: ICat = await catBusiness.findById(id);
-      response.status(200).json({ cat: cat });
+      const item: T = await this._business.findById(id);
+      response.status(200).json({ item });
     } catch (error) {
       handleError(error, 'Error finding cat', next);
     }
   }
 
-  public myFunction(myFirstArgument: Array<Date>, mySecondArgument: number): Promise<boolean> {
-    throw new Error('myFunction not implemented in class CatController');
-    return null;
-  } */
 }
