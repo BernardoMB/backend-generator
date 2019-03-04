@@ -27,8 +27,8 @@ export class CatRoutes {
     const controller = this._catController;
     router.post('', controller.create.bind(controller));
     router.get('', controller.read.bind(controller));
-    router.put('', controller.update.bind(controller));
-    router.delete('', controller.delete.bind(controller));
+    router.put('/:id', controller.update.bind(controller));
+    router.delete('/:id', controller.delete.bind(controller));
     router.get('/:id', controller.findById.bind(controller));
     return router;
   }
