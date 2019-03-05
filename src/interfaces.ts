@@ -1,7 +1,8 @@
 export interface Property {
     name: string,
     type: string,
-    required: boolean 
+    required: boolean,
+    schema?: any
 }
 
 export interface ClassProperty {

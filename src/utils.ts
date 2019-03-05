@@ -19,3 +19,7 @@ export const toCamelCase = (name: string) => {
         return p1.toLowerCase();        
     });
 }
+
+export const capitalize = (name: string) => {
+    return name.charAt(0).toUpperCase() + name.slice(1);
+}

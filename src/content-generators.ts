@@ -7,30 +7,30 @@ import {
   Controller,
   ClassProperty,
   Business,
-  Repository
+  Repository,
+  Model
 } from './interfaces';
-import { toCamelCase } from './utils';
+import { toCamelCase, capitalize } from './utils';
 
-export const generateInterfaceContent = async (_interface: Interface) => {
-  let content: string = '';
+export const generateInterfaceContent = async (_interface: Interface): Promise<string> => {
+  let content: string = `import * as mongoose from 'mongoose';\n`;
   if (_interface.externalRefs.length > 0) {
     for (let externalRef of _interface.externalRefs) {
       content += `import { I${externalRef} } from './I${externalRef}';\n`;
     }
-    content += '\n';
   }
-  content += `export interface I${_interface.name} {\n`;
+  content += `\nexport interface I${_interface.name} extends mongoose.Document {\n`;
   _interface.properties.forEach((property: Property) => {
     content += `\t${property.name}${property.required ? '' : '?'}: ${
       property.type
-    };\n`;
+      };\n`;
   });
   content += '}\n';
   return content;
 };
 
-export const generateClassContent = async (_class: Class) => {
-  let content: string = `import { Document } from 'mongoose';\n\n`;
+export const generateClassContent = async (_class: Class): Promise<string> => {
+  let content: string = '';
   const name = _class.name;
   const camelCaseName = toCamelCase(name);
   if (_class.externalRefs.length > 0) {
@@ -45,32 +45,32 @@ export const generateClassContent = async (_class: Class) => {
   _class.properties.forEach((property: Property) => {
     content += `\tget ${property.name}(): ${
       property.type
-    } {\n\t\treturn this._${camelCaseName}.${property.name};\n\t}\n\n`;
+      } {\n\t\treturn this._${camelCaseName}.${property.name};\n\t}\n\n`;
   });
   _class.methods.forEach((method: Method) => {
-    content += `\t${method.accesor} ${method.name}(`;
+    content += `
+    ${method.accesor} ${method.name}(`;
     method.arguments.forEach((argument: Argument, index: number) => {
       content += `${index == 0 ? '' : ' '}${argument.name}: ${argument.type}${
         index === method.arguments.length - 1 ? '' : ','
-      }`;
+        }`;
     });
     content += `): ${method.type} {
-        throw new Error('${method.name} not implemented in class ${
-      name
-    }Controller');
+        throw new Error('${method.name} not implemented in class ${name}Controller');
         return null;
-      }
-        `;
+    }
+    `;
   });
-  content += '}\n';
+  content += `
+}`;
   return content;
 };
 
-export const generateHandleErrorContent = async () => {
+export const generateHandleErrorContent = async (): Promise<string> => {
   return `
 import { NextFunction } from 'express';
 
-export function handleError(error, message: string, next: NextFunction) {
+export function handleError(error: any, message: string, next: NextFunction) {
   next({
     message: \`\${message}: \${error.message}\`,
     code: !!error.code ? error.code : 500
@@ -79,12 +79,12 @@ export function handleError(error, message: string, next: NextFunction) {
   `;
 }
 
-export const generateBaseControllerContent = async () => {
+export const generateBaseControllerContent = async (): Promise<string> => {
   return `
 import { Request, Response, NextFunction } from 'express';
 import { handleError } from './../helps/handle-error';
-import { IReadController } from '../interfaces/IReadController';
-import { IWriteController } from '../interfaces/IWriteController';
+import { IReadController } from '../interfaces/ReadController';
+import { IWriteController } from '../interfaces/WriteController';
 
 export class BaseController<T> implements IReadController<T>, IWriteController<T> {
   
@@ -154,7 +154,7 @@ export class BaseController<T> implements IReadController<T>, IWriteController<T
   `;
 }
 
-export const generateIReadControllerContent = async () => {
+export const generateIReadControllerContent = async (): Promise<string> => {
   return `
 import { RequestHandler } from 'express';
 
@@ -162,10 +162,10 @@ export interface IReadController<T> {
     read: RequestHandler,
     findById: RequestHandler
 }
-  `;
+`;
 }
 
-export const generateIWriteControllerContent = async () => {
+export const generateIWriteControllerContent = async (): Promise<string> => {
   return `
 import { RequestHandler } from 'express';
 
@@ -174,10 +174,10 @@ export interface IWriteController<T> {
     update: RequestHandler,
     delete: RequestHandler
 }
-  `;
+`;
 }
 
-export const generateControllerContent = async (controller: Controller) => {
+export const generateControllerContent = async (controller: Controller): Promise<string> => {
   const name: string = controller.name;
   let content: string = `
 import { BaseController } from './base/BaseController';
@@ -197,21 +197,20 @@ export class ${name}Controller extends BaseController<I${name}> {
   });
   content += `
   constructor() {
-    super(new ${name}());
+    super(new ${name}Business());
   }
-  \n
   `;
   controller.methods.forEach((method: Method) => {
     content += `${method.accesor} ${method.name}(`;
     method.arguments.forEach((argument: Argument, index: number) => {
       content += `${index == 0 ? '' : ' '}${argument.name}: ${argument.type}${
         index === method.arguments.length - 1 ? '' : ','
-      }`;
+        }`;
     });
     content += `): ${method.type} {
     throw new Error('${
       method.name
-    } not implemented in class ${name}Controller');
+      } not implemented in class ${name}Controller');
     return null;
   }
     `;
@@ -221,10 +220,10 @@ export class ${name}Controller extends BaseController<I${name}> {
   return content;
 };
 
-export const generateBaseBusinessContent = async () => {
+export const generateBaseBusinessContent = async (): Promise<string> => {
   return `
-import { IReadBusiness } from "../interfaces/IReadBusiness";
-import { IWriteBusiness } from "../interfaces/IWriteBusiness";
+import { IReadBusiness } from "../interfaces/ReadBusiness";
+import { IWriteBusiness } from "../interfaces/WriteBusiness";
 
 export class BaseBusiness<T> implements IReadBusiness<T>, IWriteBusiness<T> {
   
@@ -269,29 +268,29 @@ export class BaseBusiness<T> implements IReadBusiness<T>, IWriteBusiness<T> {
   }
   
 }
-  `;
+`;
 }
 
-export const generateIReadBusinessContent = async () => {
+export const generateIReadBusinessContent = async (): Promise<string> => {
   return `
 export interface IReadBusiness<T> {
   create(item: T): Promise<T>,
   update(_id: string, item: T): Promise<T>,
   delete(_id: string): Promise<boolean>
-}  
-  `;
+}
+`;
 }
 
-export const generateIWriteBusinessContent = async () => {
+export const generateIWriteBusinessContent = async (): Promise<string> => {
   return `
 export interface IWriteBusiness<T> {
   read(): Promise<Array<T>>,
   findById(_id: string): Promise<T>
 }
-  `;
+`;
 }
 
-export const generateBusinessContent = async (business: Business) => {
+export const generateBusinessContent = async (business: Business): Promise<string> => {
   const name: string = business.name;
   let content: string = `
 import { ${name}Repository } from '../repositories/${name}Repository';
@@ -319,12 +318,12 @@ export class ${name}Business extends BaseBusiness<I${name}> {
     method.arguments.forEach((argument: Argument, index: number) => {
       content += `${index == 0 ? '' : ' '}${argument.name}: ${argument.type}${
         index === method.arguments.length - 1 ? '' : ','
-      }`;
+        }`;
     });
     content += `): ${method.type} {
     throw new Error('${
       method.name
-    } not implemented in class ${name}Controller');
+      } not implemented in class ${name}Controller');
     return null;
   }
     `;
@@ -334,11 +333,11 @@ export class ${name}Business extends BaseBusiness<I${name}> {
   return content;
 };
 
-export const generateBaseRepositoryContent = async () => {
+export const generateBaseRepositoryContent = async (): Promise<string> => {
   return `
 import { Document, Model } from 'mongoose';
-import { IReadRepository } from '../interfaces/IReadRepository';
-import { IWriteRepository } from '../interfaces/IWriteRepository';
+import { IReadRepository } from '../interfaces/ReadRepository';
+import { IWriteRepository } from '../interfaces/WriteRepository';
 
 export class BaseRepository<T extends Document> implements IReadRepository<T>, IWriteRepository<T> {
 
@@ -409,10 +408,10 @@ export class BaseRepository<T extends Document> implements IReadRepository<T>, I
   }
 
 }  
-  `;
+`;
 }
 
-export const generateIReadRepositoryContent = async () => {
+export const generateIReadRepositoryContent = async (): Promise<string> => {
   return `
 export interface IReadRepository<T> {
   read(): Promise<T[]>,
@@ -421,10 +420,10 @@ export interface IReadRepository<T> {
   find(conditions: any, projections?: string, options?: any): Promise<T[]>,
   findOne(conditions: any, projections?: string, options?: any): Promise<T>
 }
-  `;
+`;
 }
 
-export const generateIWriteRepositoryContent = async () => {
+export const generateIWriteRepositoryContent = async (): Promise<string> => {
   return `
 export interface IWriteRepository<T> {
   create(item: T): Promise<T>,
@@ -435,14 +434,14 @@ export interface IWriteRepository<T> {
   deleteMany(condition: any): Promise<any>,
   drop(): Promise<any>
 }
-  `;
+`;
 }
 
-export const generateRepositoryContent = async (repository: Repository) => {
+export const generateRepositoryContent = async (repository: Repository): Promise<string> => {
   const name: string = repository.name;
   let content: string = `
 import { BaseRepository } from './base/BaseRepository';
-import { ${toCamelCase(name)}Schema } from '..data-access/schemas/${name}Schema';
+import { ${name}Model } from '../data-access/models/${name}Model';
 import { I${name} } from '../models/interfaces/I${name}';`;
   repository.externalRefs.forEach((externalRef: string) => {
     content += `import { I${externalRef} } from './../models/interfaces/I${externalRef}';
@@ -458,7 +457,7 @@ import { I${name} } from '../models/interfaces/I${name}';`;
   });
   content += `
   constructor() {
-    super(${toCamelCase(name)}Schema);
+    super(${name}Model);
   }
   `;
   repository.methods.forEach((method: Method) => {
@@ -466,12 +465,12 @@ import { I${name} } from '../models/interfaces/I${name}';`;
     method.arguments.forEach((argument: Argument, index: number) => {
       content += `${index == 0 ? '' : ' '}${argument.name}: ${argument.type}${
         index === method.arguments.length - 1 ? '' : ','
-      }`;
+        }`;
     });
     content += `): ${method.type} {
     throw new Error('${
       method.name
-    } not implemented in class ${name}Controller');
+      } not implemented in class ${name}Controller');
     return null;
   }
     `;
@@ -480,3 +479,29 @@ import { I${name} } from '../models/interfaces/I${name}';`;
 }\n`;
   return content;
 };
+
+export const generateSchemaContent = async (model: Model): Promise<string> => {
+  const name: string = model.name;
+  let content: string = `import { Schema } from 'mongoose';
+
+export const ${toCamelCase(name)}Schema = new Schema ({`;
+  model.properties.forEach((property: Property) => {
+    content += `
+  ${property.name}: ${property.schema},`;
+  });
+content += `
+});`;
+  return content;
+};
+
+export const generateMongooseModelContent = async (repository: Repository): Promise<string> => {
+  const name: string = repository.name;
+  let content: string = `
+import { Model, model } from 'mongoose';
+import { ${toCamelCase(name)}Schema } from '../schemas/${name}Schema';
+import { I${name} } from '../../models/interfaces/I${name}';
+
+export const ${name}Model: Model<I${name}> = model<I${name}>('${name}', ${toCamelCase(name)}Schema);
+`;
+  return content;
+}

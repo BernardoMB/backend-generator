@@ -7,3 +7,5 @@
 - Determine generic user collection.
 - Ask Farid why combining Morgan and Winston. Are those bad practices?
 - Best authentication methods.
+- Make code simpler
+- Fix user collection

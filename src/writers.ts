@@ -5,25 +5,27 @@ import {
   Class,
   Controller,
   Business,
-  Repository
+  Repository,
+  Model
 } from './interfaces';
 import {
   generateInterfaceContent,
   generateClassContent,
   generateControllerContent,
-  generateBusinessInterfaceContent,
+  generateIReadControllerContent,
+  generateIWriteControllerContent,
   generateBusinessContent,
+  generateIReadBusinessContent,
+  generateIWriteBusinessContent,
   generateRepositoryContent,
+  generateIReadRepositoryContent,
+  generateIWriteRepositoryContent,
   generateHandleErrorContent,
   generateBaseControllerContent,
-  generateReadControllerContent,
-  generateWriteControllerContent,
   generateBaseBusinessContent,
-  generateReadBusinessContent,
-  generateWriteBusinessContent,
   generateBaseRepositoryContent,
-  generateReadRepositoryContent,
-  generateWriteRepositoryContent
+  generateSchemaContent,
+  generateMongooseModelContent
 } from './content-generators';
 
 export const makeDirectory = async (directory: string): Promise<string> => {
@@ -97,6 +99,7 @@ export const writeControllerFiles = async () => {
   await makeDirectory('./server');
   await makeDirectory('./server/controllers');
   await makeDirectory('./server/controllers/helps');
+  await makeDirectory('./server/controllers/base');
   await makeDirectory('./server/controllers/interfaces');
   const filePaths: Array<string> = [];
 
@@ -107,20 +110,20 @@ export const writeControllerFiles = async () => {
   filePaths.push(createdFilePath);
 
   fileName = 'BaseController.ts';
-  filePath = `./server/controllers/interfaces/${fileName}`;
+  filePath = `./server/controllers/base/${fileName}`;
   content = await generateBaseControllerContent();
   createdFilePath = await writeFile(filePath, content);
   filePaths.push(createdFilePath);
 
   fileName = 'ReadController.ts';
   filePath = `./server/controllers/interfaces/${fileName}`;
-  content = await generateReadControllerContent();
+  content = await generateIReadControllerContent();
   createdFilePath = await writeFile(filePath, content);
   filePaths.push(createdFilePath);
 
   fileName = 'WriteController.ts';
   filePath = `./server/controllers/interfaces/${fileName}`;
-  content = await generateWriteControllerContent();
+  content = await generateIWriteControllerContent();
   createdFilePath = await writeFile(filePath, content);
   filePaths.push(createdFilePath);
 
@@ -148,24 +151,25 @@ export const writeModelController = async (
 export const writeBusinessFiles = async () => {
   await makeDirectory('./server');
   await makeDirectory('./server/businesses');
+  await makeDirectory('./server/businesses/base');
   await makeDirectory('./server/businesses/interfaces');
   const filePaths: Array<string> = [];
 
   let fileName: string = 'BaseBusiness.ts';
-  let filePath: string = `./server/businesses/interfaces/${fileName}`;
+  let filePath: string = `./server/businesses/base/${fileName}`;
   let content: string = await generateBaseBusinessContent();
   let createdFilePath: string = await writeFile(filePath, content);
   filePaths.push(createdFilePath);
 
   fileName = 'ReadBusiness.ts';
   filePath = `./server/businesses/interfaces/${fileName}`;
-  content = await generateReadBusinessContent();
+  content = await generateIReadBusinessContent();
   createdFilePath = await writeFile(filePath, content);
   filePaths.push(createdFilePath);
 
   fileName = 'WriteBusiness.ts';
   filePath = `./server/businesses/interfaces/${fileName}`;
-  content = await generateWriteBusinessContent();
+  content = await generateIWriteBusinessContent();
   createdFilePath = await writeFile(filePath, content);
   filePaths.push(createdFilePath);
 
@@ -174,54 +178,44 @@ export const writeBusinessFiles = async () => {
 
 export const writeModelBusiness = async (business: Business, flat: Boolean) => {
   const fileName: string = `${business.name}Business.ts`;
-  let businessInterfaceFilePath: string;
   let businessFilePath: string;
   if (!flat) {
     await makeDirectory('./server');
     await makeDirectory('./server/businesses');
-    await makeDirectory('./server/businesses/interfaces');
-    businessInterfaceFilePath = `./server/businesses/interfaces/I${fileName}`;
     businessFilePath = `./server/businesses/${fileName}`;
   } else {
-    businessInterfaceFilePath = `I${fileName}`;
     businessFilePath = `${fileName}`;
   }
-  const businessInterfaceContent: string = await generateBusinessInterfaceContent(
-    business
-  );
   const businessContent: string = await generateBusinessContent(business);
-  const createdBusinessInterfaceFilePath: string = await writeFile(
-    businessInterfaceFilePath,
-    businessInterfaceContent
-  );
   const createdBusinessFilePath: string = await writeFile(
     businessFilePath,
     businessContent
   );
-  return [createdBusinessInterfaceFilePath, createdBusinessFilePath];
+  return [createdBusinessFilePath];
 };
 
 export const writeRepositoryFiles = async () => {
   await makeDirectory('./server');
   await makeDirectory('./server/repositories');
+  await makeDirectory('./server/repositories/base');
   await makeDirectory('./server/repositories/interfaces');
   const filePaths: Array<string> = [];
 
   let fileName: string = 'BaseRepository.ts';
-  let filePath: string = `./server/repositories/interfaces/${fileName}`;
+  let filePath: string = `./server/repositories/base/${fileName}`;
   let content: string = await generateBaseRepositoryContent();
   let createdFilePath: string = await writeFile(filePath, content);
   filePaths.push(createdFilePath);
 
   fileName = 'ReadRepository.ts';
   filePath = `./server/repositories/interfaces/${fileName}`;
-  content = await generateReadRepositoryContent();
+  content = await generateIReadRepositoryContent();
   createdFilePath = await writeFile(filePath, content);
   filePaths.push(createdFilePath);
 
   fileName = 'WriteRepository.ts';
   filePath = `./server/repositories/interfaces/${fileName}`;
-  content = await generateWriteRepositoryContent();
+  content = await generateIWriteRepositoryContent();
   createdFilePath = await writeFile(filePath, content);
   filePaths.push(createdFilePath);
 
@@ -242,6 +236,44 @@ export const writeModelRepository = async (
     filePath = fileName;
   }
   const content: string = await generateRepositoryContent(respository);
+  const createdFilePath: string = await writeFile(filePath, content);
+  return createdFilePath;
+};
+
+export const writeModelSchema = async (
+  model: Model,
+  flat: Boolean
+) => {
+  const fileName: string = `${model.name}Schema.ts`;
+  let filePath: string;
+  if (!flat) {
+    await makeDirectory('./server');
+    await makeDirectory('./server/data-access');
+    await makeDirectory('./server/data-access/schemas');
+    filePath = `./server/data-access/schemas/${fileName}`;
+  } else {
+    filePath = fileName;
+  }
+  const content: string = await generateSchemaContent(model);
+  const createdFilePath: string = await writeFile(filePath, content);
+  return createdFilePath;
+};
+
+export const writeMongooseModel = async (
+  respository: Repository,
+  flat: Boolean
+) => {
+  const fileName: string = `${respository.name}Model.ts`;
+  let filePath: string;
+  if (!flat) {
+    await makeDirectory('./server');
+    await makeDirectory('./server/data-access');
+    await makeDirectory('./server/data-access/models');
+    filePath = `./server/data-access/models/${fileName}`;
+  } else {
+    filePath = fileName;
+  }
+  const content: string = await generateMongooseModelContent(respository);
   const createdFilePath: string = await writeFile(filePath, content);
   return createdFilePath;
 };

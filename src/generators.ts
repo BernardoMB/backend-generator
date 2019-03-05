@@ -15,7 +15,9 @@ import {
   writeModelRepository,
   writeControllerFiles,
   writeBusinessFiles,
-  writeRepositoryFiles
+  writeRepositoryFiles,
+  writeModelSchema,
+  writeMongooseModel
 } from './writers';
 
 // TODO: generate server.ts, middelwares.ts, api.ts, db files, schemas, data access files and the following files
@@ -48,7 +50,6 @@ export const generateGenericServerFiles = async () => {
 export const generateModel = async (model: Model) => {
   let files: Array<string> = [];
   let filePath: string;
-  let filePaths: Array<string>;
   if (model.interface) {
     const _interface: Interface = {
       name: model.name,
@@ -123,7 +124,24 @@ export const generateModel = async (model: Model) => {
     	files.push(filePath);
     	console.log(chalk.magentaBright('Generated model repository files!'));	
 		} catch (error) {
-			const message = 'Error generating model repository files files';
+			const message = 'Error generating model repository files';
+			throw new Error(chalk.redBright(message, error));
+		}
+		try {
+      console.log(chalk.greenBright(JSON.stringify(repository, null, 2)));
+			filePath = await writeModelSchema(model, model.flat);
+    	files.push(filePath);
+    	console.log(chalk.magentaBright('Generated model schema files!'));	
+		} catch (error) {
+			const message = 'Error generating model schema files';
+			throw new Error(chalk.redBright(message, error));
+		}
+		try {
+			filePath = await writeMongooseModel(repository, model.flat);
+    	files.push(filePath);
+    	console.log(chalk.magentaBright('Generated Mongoose model files!'));	
+		} catch (error) {
+			const message = 'Error generating Mongoose model files';
 			throw new Error(chalk.redBright(message, error));
 		}
   }
