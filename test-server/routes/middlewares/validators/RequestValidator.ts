@@ -1,5 +1,6 @@
 import { validationResult, ValidationChain } from 'express-validator/check';
 import { RequestHandler } from 'express';
+
 export default class RequestValidator {
   public static validateWith(arr: ValidationChain[]): RequestHandler[] {
     return [...arr, validateRequest];
@@ -17,7 +18,7 @@ export function validateRequest(req, res, next): void {
     next({
       message: `Invalid request: ${errors.length} error${
         errors.length > 1 ? 's' : ''
-      } occured`,
+        } occured`,
       errors,
       code: 422
     });

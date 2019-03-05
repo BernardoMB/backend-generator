@@ -1,0 +1,4 @@
+timestamp=2019-03-05T02:33:08.250Z level=info application=newt-mx-rest-api correlationId=- remote-addr=::1 url=/api/cat method=POST
+
+timestamp=2019-03-05T02:33:08.282Z level=info application=newt-mx-rest-api correlationId=- remote-addr=::1 url=/api/cat method=POST status=201 responseTime=24
+
