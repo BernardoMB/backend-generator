@@ -1,51 +1,58 @@
 import * as Mongoose from 'mongoose';
+import chalk from 'chalk';
 
 export class Db {
-  private auth: boolean;
-
-  constructor(auth: boolean) {
-    this.auth = auth;
+  
+  constructor() {
     (<any>Mongoose).Promise = global.Promise;
   }
 
-  //Connect to the mongodb database corresponding to the current environment
-  async connect() {
+  /**
+   * Create mongodb databse connection.
+   *
+   * @returns {Promise<typeof Mongoose>}
+   * @memberof Db
+   */
+  async connect(): Promise<typeof Mongoose> {
     try {
-			//const db = process.env.DB;
-			const dbName = 'backend-generator';
-      const db = `mongodb://localhost/${dbName}`;
       let connection: typeof Mongoose;
-      if (this.auth) {
+      const db = process.env.DB;
+      const connectionOptions = {
+        useNewUrlParser: true,
+        useFindAndModify: false,
+        useCreateIndex: true
+      }
+      if (process.env.DB_AUTH) {
         connection = await Mongoose.connect(
-					db,
-					// WARNING: Database authentication not implemented
-					/* { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true, user: 'newt', pass: 'mimaamakim' } */
-					{ useNewUrlParser: true }
-					);
-				} else {
-					connection = await Mongoose.connect(
-						db,
-						// WARNING: Database authentication not implemented
-						/* { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true } */
-						{ useNewUrlParser: true }
+          db,
+          // WARNING: Database authentication not implemented
+          { ...connectionOptions,/* user: 'newt', pass: 'mimaamakim' */ }
+        );
+      } else {
+        connection = await Mongoose.connect(
+          db,
+          { ...connectionOptions }
         );
       }
-      console.log(`Running on environment: \x1b[34m${process.env.NODE_ENV}\x1b[0m`);
-      console.log(`Connected to db: \x1b[34m${db}\x1b[0m`);
+      console.log(`Running on environment: ${chalk.magentaBright(process.env.NODE_ENV)}`);
+      console.log(`Connected to db: ${chalk.magentaBright(db)}`);
       return connection;
-    } catch (e) {
-      console.error(`Error connecting to db: \x1b[31m${e}\x1b[0m`);
+    } catch (error) {
+      console.error(`Error connecting to db: ${chalk.redBright(error)}`);
     }
   }
-  //Disconnect from the mongodb database
+
+  /**
+   * Disconnect from the mongodb database.
+   *
+   * @memberof Db
+   */
   async disconnect() {
     try {
-      //const db = process.env.DB;
-			const dbName = 'backend-generator';
-      const db = `mongodb://localhost/${dbName}`;
-      console.log(`Disconnected from db: \x1b[34m${db}\x1b[0m`);
-    } catch (e) {
-      console.error(`Error disconnecting from db: \x1b[31m${e}\x1b[0m`);
+      const db = process.env.DB;
+      console.log(`Disconnected from db: ${chalk.magentaBright(db)}`);
+    } catch (error) {
+      console.error(`Error disconnecting from db: ${chalk.redBright(error)}`);
     }
   }
 }

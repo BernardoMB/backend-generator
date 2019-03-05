@@ -1,6 +1,6 @@
 import * as winston from 'winston';
 
-export function loggerFactory(){
+export function loggerFactory(): winston.Logger {
     const options = {
         file: {
             level: process.env.LOGGING_LEVEL,
@@ -18,15 +18,16 @@ export function loggerFactory(){
             colorize: true
         }
     };
-    return winston.createLogger({
+    const logger = winston.createLogger({
         format: winston.format.combine(
             winston.format.timestamp(),
             winston.format.printf(i => `timestamp=${i.timestamp} level=${i.level} application=${process.env.APPLICATION_NAME} ${i.message}`)
-            ),    
+        ),
         transports: [
             new winston.transports.File(options.file),
             new winston.transports.Console(options.console)
         ],
-        exitOnError: false, // do not exit on handled exceptions
+        exitOnError: false, // handled exceptions will not cause process.exit
     });
+    return logger;
 };
