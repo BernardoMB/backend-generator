@@ -2,3 +2,57 @@ timestamp=2019-03-05T02:33:08.250Z level=info application=newt-mx-rest-api corre
 
 timestamp=2019-03-05T02:33:08.282Z level=info application=newt-mx-rest-api correlationId=- remote-addr=::1 url=/api/cat method=POST status=201 responseTime=24
 
+timestamp=2019-03-06T01:48:26.883Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat method=POST
+
+timestamp=2019-03-06T01:48:26.926Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat method=POST status=500 responseTime=34
+
+timestamp=2019-03-06T01:48:26.913Z level=error application=my-generated-app correlationId=undefined remote-addr=::1 url=/api/cat method=POST status=500 error="Error creating item: Cat validation failed: owners: Path `owners` is required., age: Path `age` is required., weight: Path `weight` is required., height: Path `height` is required."
+timestamp=2019-03-06T02:11:14.111Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat method=POST
+
+timestamp=2019-03-06T02:11:14.239Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat method=POST status=201 responseTime=119
+
+timestamp=2019-03-06T02:12:17.277Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat method=GET
+
+timestamp=2019-03-06T02:12:17.316Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat method=GET status=200 responseTime=34
+
+timestamp=2019-03-06T02:17:31.631Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat method=POST
+
+timestamp=2019-03-06T02:17:31.648Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat method=POST status=201 responseTime=15
+
+timestamp=2019-03-06T02:24:03.665Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat method=POST
+
+timestamp=2019-03-06T02:24:03.695Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat method=POST status=201 responseTime=22
+
+timestamp=2019-03-06T02:31:42.169Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat method=GET
+
+timestamp=2019-03-06T02:31:42.193Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat method=GET status=200 responseTime=20
+
+timestamp=2019-03-06T02:41:57.720Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat method=GET
+
+timestamp=2019-03-06T02:41:57.728Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat method=GET status=200 responseTime=6
+
+timestamp=2019-03-06T02:47:48.844Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat/5c7f2dbbfd4f1441ec53a265 method=PUT
+
+timestamp=2019-03-06T02:47:48.867Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat/5c7f2dbbfd4f1441ec53a265 method=PUT status=202 responseTime=20
+
+timestamp=2019-03-06T02:48:02.726Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat method=GET
+
+timestamp=2019-03-06T02:48:02.732Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat method=GET status=200 responseTime=4
+
+timestamp=2019-03-06T02:49:39.329Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat/5c7f2dbbfd4f1441ec53a265 method=DELETE
+
+timestamp=2019-03-06T02:49:39.336Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat/5c7f2dbbfd4f1441ec53a265 method=DELETE status=200 responseTime=5
+
+timestamp=2019-03-06T02:52:32.001Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat/5c7f2dbbfd4f1441ec53a265 method=GET
+
+timestamp=2019-03-06T02:52:32.007Z level=error application=my-generated-app correlationId=undefined remote-addr=::1 url=/api/cat/5c7f2dbbfd4f1441ec53a265 method=GET status=500 error="Error finding cat: Item not found"
+timestamp=2019-03-06T02:52:32.009Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat/5c7f2dbbfd4f1441ec53a265 method=GET status=404 responseTime=6
+
+timestamp=2019-03-06T02:52:41.213Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat method=POST
+
+timestamp=2019-03-06T02:52:41.219Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat method=POST status=201 responseTime=4
+
+timestamp=2019-03-06T02:52:55.304Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat/5c7f35f9cf22e63164b3ba21 method=GET
+
+timestamp=2019-03-06T02:52:55.310Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/cat/5c7f35f9cf22e63164b3ba21 method=GET status=200 responseTime=4
+

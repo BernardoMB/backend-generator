@@ -16,31 +16,31 @@
                     "name": "height",
                     "type": "number",
                     "required": false,
-                    "schema": "{ type: Number, required: true }"
+                    "schema": "{ type: Number, required: false }"
                 },
                 {
                     "name": "weight",
                     "type": "number",
                     "required": false,
-                    "schema": "{ type: Number, required: true }"
+                    "schema": "{ type: Number, required: false }"
                 },
                 {
                     "name": "age",
                     "type": "number",
                     "required": false,
-                    "schema": "{ type: Number, required: true }"
+                    "schema": "{ type: Number, required: false }"
                 },
                 {
                     "name": "owners",
                     "type": "Array<IPerson>",
                     "required": false,
-                    "schema": "{ type: Schema.Types.ObjectId, ref: 'Person', required: true }"
+                    "schema": "{ type: Schema.Types.ObjectId, ref: 'Person', required: false }"
                 }, 
                 {
                     "name": "someProperty",
                     "type": "{ key1: IPerson, key2: number, key3: Array<IDog> }",
                     "required": false,
-                    "schema": "{ key1: { type: Schema.Types.ObjectId, ref: 'Person', required: false }, key2: { type: Number, required: false }, key3: { type: [{ type: Schema.Types.ObjectId, ref: 'Dog', required: false }], required: false } }"
+                    "schema": "{ key1: { type: Schema.Types.ObjectId, ref: 'Person', required: false }, key2: { type: Number, required: false }, key3: { type: [{ type: Schema.Types.ObjectId, ref: 'Dog', required: false }], required: false, default: null } }"
                 }
             ],
             "methods": [
