@@ -17,28 +17,29 @@ import {
   writeBusinessFiles,
   writeRepositoryFiles,
   writeModelSchema,
-  writeMongooseModel
+  writeMongooseModel,
+  writeLoggerFactory,
+  writeMainFiles,
+  writeMiddleWares,
+  writeDataAccessFiles,
+  writeModelRoutes,
+  writeApiFile
 } from './writers';
 
-// TODO: generate server.ts, middelwares.ts, api.ts, db files, schemas, data access files and the following files
-// Route files are also very important
-// Config folder in server root
-// Generate Schemas and new stuff.
 /**
- * import { ErrorHandler } from '../middlewares/handlers/ErrorHandler';
-import { ProductRoutes } from '../ProductRoutes';
-import { PurchaseRoutes } from '../PurchaseRoutes';
-import { BalanceRoutes } from '../BalanceRoutes';
-import { UserRoutes } from '../UserRoutes';
-import { loggerFactory } from './../../config/winston'; 
+ * This funciton generates all the files that are entity independent.
  */
-export const generateGenericServerFiles = async () => {
+export const generateGenericServerFiles = async (): Promise<Array<string>> => {
   let files: Array<string> = [];
   try {
     files = [
+      ...(await writeMainFiles()), // server, main
+      ...(await writeMiddleWares()), // everything inside the middlewares directory
       ...(await writeControllerFiles()),
       ...(await writeBusinessFiles()),
-      ...(await writeRepositoryFiles())
+      ...(await writeRepositoryFiles()),
+      ...(await writeDataAccessFiles()), // config file for database
+      ...(await writeLoggerFactory()) // winston configuration file. LoggerFactory class.
     ];
     return files;
   } catch (error) {
@@ -47,7 +48,12 @@ export const generateGenericServerFiles = async () => {
   }
 };
 
-export const generateModel = async (model: Model) => {
+/**
+ * This function generates all the files to incorporate 
+ * an entity to the API.
+ * @param model 
+ */
+export const generateModel = async (model: Model): Promise<Array<string>> => {
   let files: Array<string> = [];
   let filePath: string;
   if (model.interface) {
@@ -128,7 +134,6 @@ export const generateModel = async (model: Model) => {
 			throw new Error(chalk.redBright(message, error));
 		}
 		try {
-      console.log(chalk.greenBright(JSON.stringify(repository, null, 2)));
 			filePath = await writeModelSchema(model, model.flat);
     	files.push(filePath);
     	console.log(chalk.magentaBright('Generated model schema files!'));	
@@ -143,7 +148,30 @@ export const generateModel = async (model: Model) => {
 		} catch (error) {
 			const message = 'Error generating Mongoose model files';
 			throw new Error(chalk.redBright(message, error));
-		}
+    }
+  }
+  try {
+    filePath = await writeModelRoutes(model);
+    files.push(filePath);
+    console.log(chalk.magentaBright('Generated model routes file!'));	
+  } catch (error) {
+    const message = 'Error generating model routes files';
+    throw new Error(chalk.redBright(message, error));
   }
   return files;
 };
+
+/**
+ * This function creates the Api file where all routes are declared.
+ * @param names 
+ */
+export const generateApiFile = async (names: Array<string>): Promise<string> => {
+  try {
+    const filePath = await writeApiFile(names);
+    console.log(chalk.magentaBright('Generated API file!'));	
+    return filePath;
+  } catch (error) {
+    const message = 'Error generating API file';
+    throw new Error(chalk.redBright(message, error));
+  }
+}

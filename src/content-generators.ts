@@ -12,6 +12,209 @@ import {
 } from './interfaces';
 import { toCamelCase, capitalize } from './utils';
 
+export const generateMainContent = async (): Promise<string> => {
+  return `
+  import * as express from 'express';
+  import { Db } from './data-access/config';
+  import { Api } from './routes/base/Api';
+  import chalk from 'chalk';
+  
+  require('dotenv-flow').config({
+    node_env: process.env.NODE_ENV || 'development'
+  });
+  
+  export const app = express();
+  
+  function listen(): Promise<express.Express> {
+    // Initialize all API routes.
+    Api.initialize(app);
+    // Get environment variables.
+    const port = process.env.PORT;
+    return new Promise((resolve, reject) => {
+      app.listen(port, err => {
+        if (err) {
+          reject(err);
+        }
+        console.log(\`Server running on port \${chalk.magentaBright(\`\${port}\`)}\`);
+        resolve(app);
+      });
+    });
+  }
+  
+  /**
+   * Function to initialize application.
+   *
+   * @export
+   * @returns
+   */
+  export async function init() {
+    // Create database connection object.
+    const db = new Db();
+    // Connect to the mongodb database.
+    const dbConnection = await db.connect();
+    // Wait for the server to start listening
+    const app = await listen();
+    return [dbConnection, app];
+  }
+`;
+}
+
+export const generateServerContent = async (): Promise<string> => {
+  return `
+import { init } from './main';
+(async function main() {
+  await init();
+})();
+`;
+}
+
+export const generateAdminAuthenticatorContent = async (): Promise<string> => {
+  return `
+import { Request, Response, NextFunction } from 'express';
+import { verify, TokenExpiredError } from 'jsonwebtoken';
+import { UserRepository } from '../../../repository/UserRepository';
+
+export async function AuthenticateAdmin(req: Request, res: Response, next: NextFunction) {
+  try {
+    const userRepository = new UserRepository();
+    let token = req.header('Authorization');
+    const decoded = verify(token, process.env.JWT_HASH);
+    const user = await userRepository.findOne({ _id: decoded.id, token });
+    if (!user) {
+      return next({
+        message: \`Invalid request: User is not authenticated\`,
+        code: 401
+      });
+    }
+    return next();
+  } catch (err) {
+    if (err instanceof TokenExpiredError) {
+      return next({
+        message: \`Authentication failed: the token has expired, try logging in again.\`,
+        code: 401
+      });
+    }
+    return next({
+      message: \`Authentication failed: \${err.message}\`,
+      code: 401
+    });
+  }
+}
+
+export function AuthenticateSuperAdmin(req: Request, res: Response, next: NextFunction) {
+  const token = req.header('Authorization');
+  if (token === process.env.ADMIN_MIDDLEWARE_KEY) {
+    return next();
+  }
+  return res.status(401).send('https://www.youtube.com/watch?v=3xYXUeSmb-Y');
+}  
+  `;
+}
+
+export const generateErrorHandlerContent = async (): Promise<string> => {
+  return `  
+  import { ErrorRequestHandler, Request, Response, NextFunction } from 'express';
+  import { loggerFactory } from '../../../config/winston';
+  
+export const ErrorHandler: ErrorRequestHandler = (error: any, req: Request, res: Response, next: NextFunction) => {
+  const logger = loggerFactory();
+  const message = \`(\${req.method}) \${req.originalUrl} | \${error.message}\`;
+  logger.error(\`correlationId=\${req.header(\"correlationId\")} remote-addr=\${req.ip} url=\${req.originalUrl} method=\${req.method} status=\${error.status || 500} error=\"\${error.message}\"\`);
+  if (!!error.errors) console.table(error.errors);
+  res.status(error.code).json({
+    ...error,
+    message
+  });
+};
+`;
+}
+
+export const generateHeaderValidatorContent = async (): Promise<string> => {
+return `
+import { header } from 'express-validator/check';
+
+export const AuthenticationHeaderValidator = header('Authorization', '[Authorization] header is not present or invalid')
+  .exists()
+  .matches(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/);
+`;
+}
+
+export const generateIdValidatorContent = async (): Promise<string> => {
+  return `
+import { param } from 'express-validator/check';
+
+export const ObjectIdValidator = param('id', 'Specified param Id is invalid, must be an ObjectId')
+  .exists()
+  .isMongoId();
+
+export const IntIdValidator = param('id', 'Specified Id is invalid, must be an integer')
+  .isEmpty()
+  .isInt();
+  `;
+}
+
+export const generateRequestValidatorContent = async (): Promise<string> => {
+  return `
+import { validationResult, ValidationChain } from 'express-validator/check';
+import { RequestHandler } from 'express';
+
+export default class RequestValidator {
+  public static validateWith(arr: ValidationChain[]): RequestHandler[] {
+    return [...arr, validateRequest];
+  }
+}
+
+export function validateRequest(req, res, next): void {
+  if (!validationResult(req).isEmpty()) {
+    const errors = validationResult(req)
+      .array({ onlyFirstError: true })
+      .map(
+        (err: any) =>
+          \`\${err.location}[\${err.param}] = \${err.value} | \${err.msg}\`
+      );
+    next({
+      message: \`Invalid request: \${errors.length} error\${
+        errors.length > 1 ? 's' : ''
+        } occured\`,
+      errors,
+      code: 422
+    });
+  } else {
+    next();
+  }
+}
+  `;
+}
+
+export const generateUserValidatorContent = async (): Promise<string> => {
+  return `
+import { checkSchema } from 'express-validator/check';
+
+export const userFieldsValidator = checkSchema({
+  username: {
+    in: ['body'],
+    exists: {
+      errorMessage: 'username field must be present'
+    },
+    isString: {
+      errorMessage: 'username field must be a valid non whitespace string'
+    },
+    trim: true
+  },
+  password: {
+    in: ['body'],
+    exists: {
+      errorMessage: 'password field must be present'
+    },
+    isString: {
+      errorMessage: 'password field must be a valid non whitespace string'
+    },
+    trim: true
+  }
+});
+  `;
+}
+
 export const generateInterfaceContent = async (_interface: Interface): Promise<string> => {
   let content: string = `import * as mongoose from 'mongoose';\n`;
   if (_interface.externalRefs.length > 0) {
@@ -502,6 +705,196 @@ import { ${toCamelCase(name)}Schema } from '../schemas/${name}Schema';
 import { I${name} } from '../../models/interfaces/I${name}';
 
 export const ${name}Model: Model<I${name}> = model<I${name}>('${name}', ${toCamelCase(name)}Schema);
+`;
+  return content;
+}
+
+export const generateDBConfigFile = async (): Promise<string> => {
+  return `
+import * as Mongoose from 'mongoose';
+import chalk from 'chalk';
+
+export class Db {
+  
+  constructor() {
+    (<any>Mongoose).Promise = global.Promise;
+  }
+
+  /**
+   * Create mongodb databse connection.
+   *
+   * @returns {Promise<typeof Mongoose>}
+   * @memberof Db
+   */
+  async connect(): Promise<typeof Mongoose> {
+    try {
+      let connection: typeof Mongoose;
+      const db = process.env.DB;
+      const connectionOptions = {
+        useNewUrlParser: true,
+        useFindAndModify: false,
+        useCreateIndex: true
+      }
+      if (process.env.DB_AUTH) {
+        connection = await Mongoose.connect(
+          db,
+          // WARNING: Database authentication not implemented
+          { ...connectionOptions,/* user: 'newt', pass: 'mimaamakim' */ }
+        );
+      } else {
+        connection = await Mongoose.connect(
+          db,
+          { ...connectionOptions }
+        );
+      }
+      console.log(\`Running on environment: \${chalk.magentaBright(process.env.NODE_ENV)}\`);
+      console.log(\`Connected to db: \${chalk.magentaBright(db)}\`);
+      return connection;
+    } catch (error) {
+      console.error(\`Error connecting to db: \${chalk.redBright(error)}\`);
+    }
+  }
+
+  /**
+   * Disconnect from the mongodb database.
+   *
+   * @memberof Db
+   */
+  async disconnect() {
+    try {
+      const db = process.env.DB;
+      console.log(\`Disconnected from db: \${chalk.magentaBright(db)}\`);
+    } catch (error) {
+      console.error(\`Error disconnecting from db: \${chalk.redBright(error)}\`);
+    }
+  }
+}  
+  `;
+}
+
+export const generateModelRoutesContent = async (model: Model): Promise<string> => {
+  const name = model.name;
+  return `
+import { Router } from 'express';
+import { ${name}Controller } from '../controllers/${name}Controller';
+
+const router: Router = Router();
+
+export class ${name}Routes {
+
+  public _${toCamelCase(name)}Controller: ${name}Controller;
+
+  constructor() {
+    this._${toCamelCase(name)}Controller = new ${name}Controller();	
+  }
+
+  routes(): Router {
+    const controller = this._${toCamelCase(name)}Controller;
+    router.post('', controller.create.bind(controller));
+    router.get('', controller.read.bind(controller));
+    router.put('/:id', controller.update.bind(controller));
+    router.delete('/:id', controller.delete.bind(controller));
+    router.get('/:id', controller.findById.bind(controller));
+    return router;
+  }
+}  
+`;
+}
+
+export const generateLoggerFactoryContent = async (): Promise<string> => {
+  return `
+import * as winston from 'winston';
+
+export function loggerFactory(): winston.Logger {
+    const options = {
+        file: {
+            level: process.env.LOGGING_LEVEL,
+            filename: process.env.LOG_FOLDER,
+            handleExceptions: true,
+            json: false,
+            maxsize: 5242880, // 5MB
+            maxFiles: 5,
+            colorize: true
+        },
+        console: {
+            level: process.env.LOGGING_LEVEL,
+            handleExceptions: true,
+            json: false,
+            colorize: true
+        }
+    };
+    const logger = winston.createLogger({
+        format: winston.format.combine(
+            winston.format.timestamp(),
+            winston.format.printf(i => \`timestamp=\${i.timestamp} level=\${i.level} application=\${process.env.APPLICATION_NAME} \${i.message}\`)
+        ),
+        transports: [
+            new winston.transports.File(options.file),
+            new winston.transports.Console(options.console)
+        ],
+        exitOnError: false, // handled exceptions will not cause process.exit
+    });
+    return logger;
+};
+`;
+}
+
+export const generateApiContent = async (names: Array<string>): Promise<string> => {
+  let content: string = `
+import * as express from 'express';
+import * as helmet from 'helmet';
+import * as morgan from 'morgan';
+import * as bodyParser from 'body-parser';
+import * as expressValidator from 'express-validator';
+import { join } from 'path';
+
+import { ErrorHandler } from '../middlewares/handlers/ErrorHandler';
+import { loggerFactory } from './../../config/winston'; 
+`;
+names.forEach((name: string) => {
+  content += `
+  import { ${name}Routes } from '../${name}Routes';
+  `;
+});
+content += `const DOC_PATH = join(__dirname, \'../../../documentation\');
+`;
+content += `
+export class Api {
+  // Global route handling when matching the desired address.
+  public static initialize(app: express.Application) {
+    // Use Helmet to secure the express application by setting various HTTP headers.
+    app.use(helmet());
+    // Parse incoming request.body object before the route handlers functions.
+    app.use(bodyParser.json());
+    // Documentation routes.
+    app.use(express.static(DOC_PATH));
+    // Logger. User morgan to log incomming and outgoing traffic. 
+    let formatString = 'correlationId=:req[correlationId] remote-addr=:remote-addr url=:url method=:method';
+    const morganOptions = { 
+      immediate: true, 
+      stream: { write: message => loggerFactory().info(message)}
+    };
+    app.use(morgan(formatString, morganOptions));
+    formatString = 'correlationId=:req[correlationId] remote-addr=:remote-addr url=:url method=:method status=:status responseTime=:response-time[digits]';
+    const morganOptions2 = { 
+      stream: { write: message => loggerFactory().info(message)}
+    };
+    app.use(morgan(formatString, morganOptions2));
+    // Handle app routes.
+    app.get('/docs', (request, response) => response.sendFile(\`\${DOC_PATH}/index.html\`));
+    // Validator middleware   
+    app.use(expressValidator());
+    // Aplication routes
+`;  
+names.forEach((name: string) => {
+  content += `app.use('/api/${toCamelCase(name)}', new ${name}Routes().routes());
+  `;
+});
+content += `
+    // Middleware to handle all error messages
+    app.use(ErrorHandler);
+  }
+}
 `;
   return content;
 }
