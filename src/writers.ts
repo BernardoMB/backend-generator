@@ -37,7 +37,12 @@ import {
   generateUserValidatorContent,
   generateDBConfigFile,
   generateModelRoutesContent,
-  generateApiContent
+  generateApiContent,
+  generateUserInterface,
+  generateUserClass,
+  generateUserModel,
+  generateUserSchema,
+  generateAthenticateMiddleware
 } from "./content-generators";
 import * as path from "path";
 import { fileURLToPath } from "url";
@@ -359,5 +364,11 @@ export const writeApiFile = async (names: Array<string>): Promise<string> => {
 };
 
 export const writeUserFiles = async (): Promise<Array<string>> => {
-  return [];
+  return [
+    await writeFileSync('server/interfaces', 'IUser.ts', await generateUserInterface()),
+    await writeFileSync('server', 'User.ts', await generateUserClass()),
+    await writeFileSync('server/data-access/models', 'UserModel.ts', await generateUserModel()),
+    await writeFileSync('server/data-access/models', 'UserSchema', await generateUserSchema()),
+    await writeFileSync('server/routes/middlewares', 'authenticate', await generateAthenticateMiddleware())
+  ];
 }

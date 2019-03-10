@@ -23,7 +23,8 @@ import {
   writeMiddleWares,
   writeDataAccessFiles,
   writeModelRoutes,
-  writeApiFile
+  writeApiFile,
+  writeUserFiles
 } from './writers';
 
 /**
