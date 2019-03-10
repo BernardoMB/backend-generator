@@ -357,3 +357,7 @@ export const writeApiFile = async (names: Array<string>): Promise<string> => {
   const createdFilePath: string = await writeFile(filePath, content);
   return createdFilePath;
 };
+
+export const writeUserFiles = async (): Promise<Array<string>> => {
+  return [];
+}

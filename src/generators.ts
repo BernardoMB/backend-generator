@@ -29,7 +29,7 @@ import {
 /**
  * This funciton generates all the files that are entity independent.
  */
-export const generateGenericServerFiles = async (): Promise<Array<string>> => {
+export const generateGenericServerFiles = async (features: any): Promise<Array<string>> => {
   let files: Array<string> = [];
   try {
     files = [
@@ -41,6 +41,12 @@ export const generateGenericServerFiles = async (): Promise<Array<string>> => {
       ...(await writeDataAccessFiles()), // config file for database
       ...(await writeLoggerFactory()) // winston configuration file. LoggerFactory class.
     ];
+    if (features.users) {
+      files = [
+        ...files,
+        ...(await writeUserFiles())
+      ]
+    }
     return files;
   } catch (error) {
     const message = 'Error generating generic server files';
