@@ -37,28 +37,17 @@ import {
   generateUserValidatorContent,
   generateDBConfigFile,
   generateModelRoutesContent,
-  generateApiContent
-} from './content-generators';
-import * as path from 'path';
-var mkdirp = require('mkdirp');
+  generateApiContent,
+  generateUserInterface,
+  generateUserClass,
+  generateUserModel,
+  generateUserSchema,
+  generateAthenticateMiddleware
+} from "./content-generators";
+import * as path from "path";
+var mkdirp = require("mkdirp");
 
 const projectDirectory = process.cwd();
-
-/**
- * Creates a directory.
- * @param directory 
- */
-export const makeDirectory = async (directory: string): Promise<void> => {
-  try {
-    if (!fs.existsSync(directory)) {
-      fs.mkdirSync(directory);
-    }
-  } catch (error) {
-    const message = 'Error creating directory';
-    const errorMessage = chalk.bgRedBright(chalk.white(message, error));
-    throw new Error(errorMessage);
-  }
-};
 
 /**
  * Creates a directory in the file system recursively. 
@@ -90,7 +79,7 @@ export const writeFile = async (filePath: string, content: string): Promise<void
     throw new Error(errorMessage);
   }
 };
-
+``
 /**
  * Creates a fiele.
  * @param directory 
@@ -110,6 +99,8 @@ export const createFileSync = async (directory: string, filName: string, content
     throw new Error(errorMessage);
   }
 };
+
+// Writer functions
 
 export const writeMainFiles = async (): Promise<Array<string>> => {
   return [
@@ -282,3 +273,13 @@ export const writeMongooseModel = async (respository: Repository): Promise<strin
 export const writeApiFile = async (names: Array<string>): Promise<string> => {
   return await createFileSync('server/routes/base', 'Api.ts', await generateApiContent(names));
 };
+
+export const writeUserFiles = async (): Promise<Array<string>> => {
+  return [
+    await createFileSync('server', 'User.ts', await generateUserClass()),
+    await createFileSync('server/interfaces', 'IUser.ts', await generateUserInterface()),
+    await createFileSync('server/data-access/models', 'UserModel.ts', await generateUserModel()),
+    await createFileSync('server/data-access/models', 'UserSchema', await generateUserSchema()),
+    await createFileSync('server/routes/middlewares', 'authenticate', await generateAthenticateMiddleware())
+  ];
+}

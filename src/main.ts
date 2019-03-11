@@ -4,7 +4,8 @@ import { Model } from './interfaces';
 import { generateModel, generateGenericServerFiles, generateApiFile } from './generators';
 import { outputCreatedFiles, asyncForEach } from './utils';
 
-const data: { models: Array<Model> } = JSON.parse(fs.readFileSync('models.json').toString());
+const data: { features: any, models: Array<Model> } = JSON.parse(fs.readFileSync('models.json').toString());
+const features: any = data.features;
 const models: Array<Model> = data.models;
 
 /**
@@ -14,7 +15,7 @@ const models: Array<Model> = data.models;
 const generateServerFiles = async () => {
     try {
         console.log(chalk.blueBright('Generating server files...\n'));
-        const createdFilesNames: Array<string> = await generateGenericServerFiles();
+        const createdFilesNames: Array<string> = await generateGenericServerFiles(features);
         outputCreatedFiles(createdFilesNames);
         const message = `Server files generated!\n`
         console.log(chalk.greenBright(message));

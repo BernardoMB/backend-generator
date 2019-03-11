@@ -1,4 +1,7 @@
 {
+    "features": {
+        "users": true
+    },
     "models": [
         {
             "name": "Cat",
