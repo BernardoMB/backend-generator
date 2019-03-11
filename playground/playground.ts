@@ -1,7 +1,7 @@
-var mkdirp = require("mkdirp");
-const path = require("path");
+var mkdirp = require('mkdirp');
+const path = require('path');
 
-const directory = path.join(__dirname, "me/cagas/mi/pelo/idiota");
+const directory = path.join(__dirname, 'me/cagas/mi/pelo/idiota');
 
 mkdirp.sync(directory);
 

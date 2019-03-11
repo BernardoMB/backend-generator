@@ -51,7 +51,7 @@ export const generateGenericServerFiles = async (): Promise<Array<string>> => {
 /**
  * This function generates all the files to incorporate 
  * an entity to the API.
- * @param model 
+ * @param model Entity.
  */
 export const generateModel = async (model: Model): Promise<Array<string>> => {
   let files: Array<string> = [];
@@ -63,7 +63,7 @@ export const generateModel = async (model: Model): Promise<Array<string>> => {
       externalRefs: model.externalRefs
     };
     try {
-      filePath = await writeModelInterface(_interface, model.flat);
+      filePath = await writeModelInterface(_interface);
       files.push(filePath);
       console.log(chalk.magentaBright('Generated interface!'));
     } catch (error) {
@@ -77,9 +77,9 @@ export const generateModel = async (model: Model): Promise<Array<string>> => {
       properties: model.properties,
       methods: model.methods,
       externalRefs: model.externalRefs
-		};
+    };
     try {
-      filePath = await writeModelClass(_class, model.flat);
+      filePath = await writeModelClass(_class);
       files.push(filePath);
       console.log(chalk.magentaBright('Generated model class!'));
     } catch (error) {
@@ -95,7 +95,7 @@ export const generateModel = async (model: Model): Promise<Array<string>> => {
       externalRefs: model.controller.externalRefs
     };
     try {
-      filePath = await writeModelController(controller, model.flat);
+      filePath = await writeModelController(controller);
       files.push(filePath);
       console.log(chalk.magentaBright('Generated model controller files!'));
     } catch (error) {
@@ -111,11 +111,11 @@ export const generateModel = async (model: Model): Promise<Array<string>> => {
       externalRefs: model.business.externalRefs
     };
     try {
-      files = [...files, ...(await writeModelBusiness(business, model.flat))];
+      files = [...files, ...(await writeModelBusiness(business))];
       console.log(chalk.magentaBright('Generated model business files!'));
     } catch (error) {
-			const message = 'Error generating model business files';
-			throw new Error(chalk.redBright(message, error));
+      const message = 'Error generating model business files';
+      throw new Error(chalk.redBright(message, error));
     }
   }
   if (model.repository.include) {
@@ -124,36 +124,36 @@ export const generateModel = async (model: Model): Promise<Array<string>> => {
       properties: model.repository.properties,
       methods: model.repository.methods,
       externalRefs: model.repository.externalRefs
-		};
-		try {
-			filePath = await writeModelRepository(repository, model.flat);
-    	files.push(filePath);
-    	console.log(chalk.magentaBright('Generated model repository files!'));	
-		} catch (error) {
-			const message = 'Error generating model repository files';
-			throw new Error(chalk.redBright(message, error));
-		}
-		try {
-			filePath = await writeModelSchema(model, model.flat);
-    	files.push(filePath);
-    	console.log(chalk.magentaBright('Generated model schema files!'));	
-		} catch (error) {
-			const message = 'Error generating model schema files';
-			throw new Error(chalk.redBright(message, error));
-		}
-		try {
-			filePath = await writeMongooseModel(repository, model.flat);
-    	files.push(filePath);
-    	console.log(chalk.magentaBright('Generated Mongoose model files!'));	
-		} catch (error) {
-			const message = 'Error generating Mongoose model files';
-			throw new Error(chalk.redBright(message, error));
+    };
+    try {
+      filePath = await writeModelRepository(repository);
+      files.push(filePath);
+      console.log(chalk.magentaBright('Generated model repository files!'));
+    } catch (error) {
+      const message = 'Error generating model repository files';
+      throw new Error(chalk.redBright(message, error));
+    }
+    try {
+      filePath = await writeModelSchema(model);
+      files.push(filePath);
+      console.log(chalk.magentaBright('Generated model schema files!'));
+    } catch (error) {
+      const message = 'Error generating model schema files';
+      throw new Error(chalk.redBright(message, error));
+    }
+    try {
+      filePath = await writeMongooseModel(repository);
+      files.push(filePath);
+      console.log(chalk.magentaBright('Generated Mongoose model files!'));
+    } catch (error) {
+      const message = 'Error generating Mongoose model files';
+      throw new Error(chalk.redBright(message, error));
     }
   }
   try {
     filePath = await writeModelRoutes(model);
     files.push(filePath);
-    console.log(chalk.magentaBright('Generated model routes file!'));	
+    console.log(chalk.magentaBright('Generated model routes file!'));
   } catch (error) {
     const message = 'Error generating model routes files';
     throw new Error(chalk.redBright(message, error));
@@ -163,12 +163,12 @@ export const generateModel = async (model: Model): Promise<Array<string>> => {
 
 /**
  * This function creates the Api file where all routes are declared.
- * @param names 
+ * @param names The names of the models.
  */
 export const generateApiFile = async (names: Array<string>): Promise<string> => {
   try {
     const filePath = await writeApiFile(names);
-    console.log(chalk.magentaBright('Generated API file!'));	
+    console.log(chalk.magentaBright('Generated API file!'));
     return filePath;
   } catch (error) {
     const message = 'Error generating API file';

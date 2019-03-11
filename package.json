@@ -6,10 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "generate": "ts-node src/main.ts",
-    "regenerate": "concurrently \"npm run clean\" \"npm run generate\"",
     "clean": "rd /s /q server",
+    "regenerate": "concurrently \"npm run clean\" \"npm run generate\"",
     "test-server": "ts-node ./test-server/server.ts",
-    "test-server-watch": "nodemon --ext \".ts\" --exec \"npm run test-server\""
+    "test-server-watch": "nodemon --ext \".ts\" --exec \"npm run test-server\"",
+    "test-generated-server": "ts-node server/server.ts"
   },
   "repository": {
     "type": "git",

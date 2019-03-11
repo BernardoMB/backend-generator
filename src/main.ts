@@ -10,7 +10,6 @@ const models: Array<Model> = data.models;
 /**
  * This function generates all the customizable files that
  * do not depend on the model entities.
- * @param names 
  */
 const generateServerFiles = async () => {
     try {
@@ -28,7 +27,7 @@ const generateServerFiles = async () => {
 /**
  * This function generates all the files realted to each entity of the model, such as
  * routes, controllers, repository, etc. 
- * @param models 
+ * @param models Entities.
  */
 const generateModelsFiles = async (models: Array<Model>) => {
     console.log(chalk.blueBright('Generating models\n'));
