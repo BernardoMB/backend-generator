@@ -48,7 +48,7 @@ const generateModelsFiles = async (models: Array<Model>) => {
     const names = models.map((model: Model) => {
         return model.name;
     });
-    const createdFileName: string = await generateApiFile(names);
+    const createdFileName: string = await generateApiFile(names, features);
     outputCreatedFiles([createdFileName]);
     const message = `API generated!\n`
     console.log(chalk.greenBright(message));

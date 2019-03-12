@@ -2,3 +2,196 @@ timestamp=2019-03-05T02:33:08.250Z level=info application=newt-mx-rest-api corre
 
 timestamp=2019-03-05T02:33:08.282Z level=info application=newt-mx-rest-api correlationId=- remote-addr=::1 url=/api/cat method=POST status=201 responseTime=24
 
+timestamp=2019-03-11T22:49:00.775Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST
+
+timestamp=2019-03-11T22:49:00.906Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST status=201 responseTime=125
+
+timestamp=2019-03-11T22:56:26.374Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST
+
+timestamp=2019-03-11T22:56:26.470Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST status=201 responseTime=92
+
+timestamp=2019-03-11T23:18:00.266Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST
+
+timestamp=2019-03-11T23:18:00.362Z level=error application=my-generated-app correlationId=undefined remote-addr=::1 url=/api/user method=POST status=500 error="Error creating user: secretOrPrivateKey must have a value"
+timestamp=2019-03-11T23:18:00.366Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST status=500 responseTime=97
+
+timestamp=2019-03-11T23:21:11.332Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST
+
+timestamp=2019-03-11T23:21:11.434Z level=error application=my-generated-app correlationId=undefined remote-addr=::1 url=/api/user method=POST status=500 error="Error creating user: E11000 duplicate key error collection: my-generated-app.users index: email_1 dup key: { : "bmondragonbrozon@gmail.com" }"
+timestamp=2019-03-11T23:21:11.442Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST status=500 responseTime=102
+
+timestamp=2019-03-11T23:21:46.363Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST
+
+timestamp=2019-03-11T23:21:46.433Z level=error application=my-generated-app correlationId=undefined remote-addr=::1 url=/api/user method=POST status=500 error="Error creating user: secretOrPrivateKey must have a value"
+timestamp=2019-03-11T23:21:46.435Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST status=500 responseTime=71
+
+timestamp=2019-03-11T23:24:08.814Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST
+
+timestamp=2019-03-11T23:24:08.906Z level=error application=my-generated-app correlationId=undefined remote-addr=::1 url=/api/user method=POST status=500 error="Error creating user: secretOrPrivateKey must have a value"
+timestamp=2019-03-11T23:24:08.910Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST status=500 responseTime=93
+
+timestamp=2019-03-11T23:25:51.427Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST
+
+timestamp=2019-03-11T23:25:51.520Z level=error application=my-generated-app correlationId=undefined remote-addr=::1 url=/api/user method=POST status=500 error="Error creating user: secretOrPrivateKey must have a value"
+timestamp=2019-03-11T23:25:51.523Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST status=500 responseTime=93
+
+timestamp=2019-03-11T23:27:02.963Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST
+
+timestamp=2019-03-11T23:27:03.074Z level=error application=my-generated-app correlationId=undefined remote-addr=::1 url=/api/user method=POST status=500 error="Error creating user: secretOrPrivateKey must have a value"
+timestamp=2019-03-11T23:27:03.078Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST status=500 responseTime=112
+
+timestamp=2019-03-11T23:28:19.160Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST
+
+timestamp=2019-03-11T23:28:19.256Z level=error application=my-generated-app correlationId=undefined remote-addr=::1 url=/api/user method=POST status=500 error="Error creating user: secretOrPrivateKey must have a value"
+timestamp=2019-03-11T23:28:19.260Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST status=500 responseTime=96
+
+timestamp=2019-03-11T23:32:20.540Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST
+
+timestamp=2019-03-11T23:32:20.634Z level=error application=my-generated-app correlationId=undefined remote-addr=::1 url=/api/user method=POST status=500 error="Error creating user: secretOrPrivateKey must have a value"
+timestamp=2019-03-11T23:32:20.638Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST status=500 responseTime=95
+
+timestamp=2019-03-11T23:35:47.112Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST
+
+timestamp=2019-03-11T23:35:47.207Z level=error application=my-generated-app correlationId=undefined remote-addr=::1 url=/api/user method=POST status=500 error="Error creating user: secretOrPrivateKey must have a value"
+timestamp=2019-03-11T23:35:47.211Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST status=500 responseTime=96
+
+timestamp=2019-03-11T23:38:16.000Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST
+
+timestamp=2019-03-11T23:38:16.096Z level=error application=my-generated-app correlationId=undefined remote-addr=::1 url=/api/user method=POST status=500 error="Error creating user: secretOrPrivateKey must have a value"
+timestamp=2019-03-11T23:38:16.100Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST status=500 responseTime=97
+
+timestamp=2019-03-11T23:38:50.399Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST
+
+timestamp=2019-03-11T23:38:50.503Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST status=201 responseTime=100
+
+timestamp=2019-03-11T23:42:56.119Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST
+
+timestamp=2019-03-11T23:42:56.212Z level=error application=my-generated-app correlationId=undefined remote-addr=::1 url=/api/user method=POST status=500 error="Error creating user: E11000 duplicate key error collection: my-generated-app.users index: email_1 dup key: { : "bmondragonbrozon@gmail.com" }"
+timestamp=2019-03-11T23:42:56.222Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST status=500 responseTime=94
+
+timestamp=2019-03-12T00:03:46.185Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T00:03:46.194Z level=error application=my-generated-app correlationId=undefined remote-addr=::1 url=/api/user/me method=GET status=500 error="Error finding cat: Cast to ObjectId failed for value "me" at path "_id" for model "User""
+timestamp=2019-03-12T00:03:46.198Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=500 responseTime=9
+
+timestamp=2019-03-12T00:04:36.951Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T00:04:36.959Z level=error application=my-generated-app correlationId=undefined remote-addr=::1 url=/api/user/me method=GET status=500 error="Error finding cat: Cast to ObjectId failed for value "me" at path "_id" for model "User""
+timestamp=2019-03-12T00:04:36.963Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=500 responseTime=8
+
+timestamp=2019-03-12T00:07:05.746Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T00:07:05.751Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=401 responseTime=2
+
+timestamp=2019-03-12T00:07:45.413Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T00:07:45.419Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=401 responseTime=3
+
+timestamp=2019-03-12T00:13:17.417Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST
+
+timestamp=2019-03-12T00:13:17.508Z level=error application=my-generated-app correlationId=undefined remote-addr=::1 url=/api/user method=POST status=500 error="Error creating user: E11000 duplicate key error collection: my-generated-app.users index: email_1 dup key: { : "bmondragonbrozon@gmail.com" }"
+timestamp=2019-03-12T00:13:17.515Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST status=500 responseTime=92
+
+timestamp=2019-03-12T00:14:02.137Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST
+
+timestamp=2019-03-12T00:14:02.202Z level=error application=my-generated-app correlationId=undefined remote-addr=::1 url=/api/user method=POST status=500 error="Error creating user: secretOrPrivateKey must have a value"
+timestamp=2019-03-12T00:14:02.203Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST status=500 responseTime=65
+
+timestamp=2019-03-12T00:15:10.278Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST
+
+timestamp=2019-03-12T00:15:10.382Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST status=201 responseTime=100
+
+timestamp=2019-03-12T00:16:12.364Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T00:16:12.367Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=401 responseTime=0
+
+timestamp=2019-03-12T00:16:45.366Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=401 responseTime=0
+
+timestamp=2019-03-12T00:16:45.364Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T00:17:49.072Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T00:17:49.073Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=401 responseTime=0
+
+timestamp=2019-03-12T00:17:51.367Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=401 responseTime=0
+
+timestamp=2019-03-12T00:17:51.366Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T00:17:52.742Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T00:17:52.743Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=401 responseTime=0
+
+timestamp=2019-03-12T00:17:54.477Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=401 responseTime=0
+
+timestamp=2019-03-12T00:17:54.476Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T00:18:35.338Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T00:18:35.346Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=401 responseTime=4
+
+timestamp=2019-03-12T00:19:37.166Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T00:19:37.172Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=401 responseTime=3
+
+timestamp=2019-03-12T00:19:45.136Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T00:19:45.138Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=401 responseTime=0
+
+timestamp=2019-03-12T00:21:14.590Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T00:21:14.596Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=401 responseTime=3
+
+timestamp=2019-03-12T00:23:17.403Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T00:23:17.409Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=401 responseTime=3
+
+timestamp=2019-03-12T00:24:13.779Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T00:24:13.802Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=200 responseTime=19
+
+timestamp=2019-03-12T01:30:33.823Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/login method=POST
+
+timestamp=2019-03-12T01:30:33.928Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/login method=POST status=200 responseTime=102
+
+timestamp=2019-03-12T01:31:00.603Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T01:31:00.608Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=200 responseTime=4
+
+timestamp=2019-03-12T01:31:02.501Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T01:31:02.504Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=200 responseTime=2
+
+timestamp=2019-03-12T01:31:03.184Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T01:31:03.187Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=200 responseTime=2
+
+timestamp=2019-03-12T01:31:04.000Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T01:31:04.003Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=200 responseTime=2
+
+timestamp=2019-03-12T01:31:05.136Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T01:31:05.140Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=200 responseTime=3
+
+timestamp=2019-03-12T01:31:05.879Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T01:31:05.881Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=200 responseTime=2
+
+timestamp=2019-03-12T01:31:22.254Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/login method=POST
+
+timestamp=2019-03-12T01:31:22.318Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/login method=POST status=200 responseTime=64
+
+timestamp=2019-03-12T01:31:51.356Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:31:51.363Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=401 responseTime=2
+
+timestamp=2019-03-12T01:32:12.834Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:33:27.211Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=- responseTime=-
+
+timestamp=2019-03-12T01:35:25.164Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST
+
+timestamp=2019-03-12T01:35:25.266Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST status=201 responseTime=98
+
+timestamp=2019-03-12T01:35:42.752Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST
+

@@ -42,7 +42,11 @@ import {
   generateUserClass,
   generateUserModel,
   generateUserSchema,
-  generateAthenticateMiddleware
+  generateAthenticateMiddleware,
+  generateUserRoutes,
+  generateUserController,
+  generateUserBusiness,
+  generateUserRepository
 } from "./content-generators";
 import * as path from "path";
 var mkdirp = require("mkdirp");
@@ -270,16 +274,22 @@ export const writeMongooseModel = async (respository: Repository): Promise<strin
   return await createFileSync('server/data-access/models', `${respository.name}Model.ts`, await generateMongooseModelContent(respository));
 };
 
-export const writeApiFile = async (names: Array<string>): Promise<string> => {
-  return await createFileSync('server/routes/base', 'Api.ts', await generateApiContent(names));
+export const writeApiFile = async (names: Array<string>, features: any): Promise<string> => {
+  const includeUserRoutes: boolean = features.users;
+  return await createFileSync('server/routes/base', 'Api.ts', await generateApiContent(names, includeUserRoutes));
 };
 
 export const writeUserFiles = async (): Promise<Array<string>> => {
   return [
-    await createFileSync('server', 'User.ts', await generateUserClass()),
-    await createFileSync('server/interfaces', 'IUser.ts', await generateUserInterface()),
+    await createFileSync('server/models', 'User.ts', await generateUserClass()),
+    await createFileSync('server/models/interfaces', 'IUser.ts', await generateUserInterface()),
     await createFileSync('server/data-access/models', 'UserModel.ts', await generateUserModel()),
-    await createFileSync('server/data-access/models', 'UserSchema', await generateUserSchema()),
-    await createFileSync('server/routes/middlewares', 'authenticate', await generateAthenticateMiddleware())
+    await createFileSync('server/data-access/schemas', 'UserSchema.ts', await generateUserSchema()),
+    await createFileSync('server/routes/middlewares', 'authenticate.ts', await generateAthenticateMiddleware()),
+    await createFileSync('server/routes', 'UserRoutes.ts', await generateUserRoutes()),
+    await createFileSync('server/controllers', 'UserController.ts', await generateUserController()),
+    await createFileSync('server/businesses', 'UserBusiness.ts', await generateUserBusiness()),
+    await createFileSync('server/repositories', 'UserRepository.ts', await generateUserRepository())
   ];
+
 }

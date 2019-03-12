@@ -29,6 +29,7 @@ import {
 
 /**
  * This funciton generates all the files that are entity independent.
+ * @param features Object containing certain features.
  */
 export const generateGenericServerFiles = async (features: any): Promise<Array<string>> => {
   let files: Array<string> = [];
@@ -172,9 +173,9 @@ export const generateModel = async (model: Model): Promise<Array<string>> => {
  * This function creates the Api file where all routes are declared.
  * @param names The names of the models.
  */
-export const generateApiFile = async (names: Array<string>): Promise<string> => {
+export const generateApiFile = async (names: Array<string>, features: any): Promise<string> => {
   try {
-    const filePath = await writeApiFile(names);
+    const filePath = await writeApiFile(names, features);
     console.log(chalk.magentaBright('Generated API file!'));
     return filePath;
   } catch (error) {

@@ -130,7 +130,7 @@ export const ErrorHandler: ErrorRequestHandler = (error: any, req: Request, res:
 }
 
 export const generateHeaderValidatorContent = async (): Promise<string> => {
-return `
+  return `
 import { header } from 'express-validator/check';
 
 export const AuthenticationHeaderValidator = header('Authorization', '[Authorization] header is not present or invalid')
@@ -297,7 +297,7 @@ export class BaseController<T> implements IReadController<T>, IWriteController<T
     this._business = business;
   }
 
-  async create(request: Request, response: Response, next: NextFunction): Promise<void> {
+  public async create(request: Request, response: Response, next: NextFunction): Promise<void> {
     try {
       const item: T = <T>request.body;
       const createdItem: T = await this._business.create(item);
@@ -692,7 +692,7 @@ export const ${toCamelCase(name)}Schema = new Schema ({`;
     content += `
   ${property.name}: ${property.schema},`;
   });
-content += `
+  content += `
 });`;
   return content;
 };
@@ -839,9 +839,8 @@ export function loggerFactory(): winston.Logger {
 `;
 }
 
-export const generateApiContent = async (names: Array<string>): Promise<string> => {
-  let content: string = `
-import * as express from 'express';
+export const generateApiContent = async (names: Array<string>, includeUserRoutes: boolean): Promise<string> => {
+  let content: string = `import * as express from 'express';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
 import * as bodyParser from 'body-parser';
@@ -849,16 +848,18 @@ import * as expressValidator from 'express-validator';
 import { join } from 'path';
 
 import { ErrorHandler } from '../middlewares/handlers/ErrorHandler';
-import { loggerFactory } from './../../config/winston'; 
-`;
-names.forEach((name: string) => {
-  content += `
-  import { ${name}Routes } from '../${name}Routes';
-  `;
-});
-content += `const DOC_PATH = join(__dirname, \'../../../documentation\');
-`;
-content += `
+import { loggerFactory } from '../../config/winston';`;
+  if (includeUserRoutes) {
+    content += `
+import { UserRoutes } from \'../UserRoutes\';`;
+  }
+  names.forEach((name: string) => {
+    content += `
+import { ${name}Routes } from '../${name}Routes';`;
+  });
+  content += `\n
+const DOC_PATH = join(__dirname, \'../../../documentation\');`;
+  content += `\n
 export class Api {
   // Global route handling when matching the desired address.
   public static initialize(app: express.Application) {
@@ -884,13 +885,17 @@ export class Api {
     app.get('/docs', (request, response) => response.sendFile(\`\${DOC_PATH}/index.html\`));
     // Validator middleware   
     app.use(expressValidator());
-    // Aplication routes
-`;  
-names.forEach((name: string) => {
-  content += `app.use('/api/${toCamelCase(name)}', new ${name}Routes().routes());
-  `;
-});
-content += `
+    // Aplication routes`;
+  if (includeUserRoutes) {
+    content += `
+    app.use(\'/api/user\', new UserRoutes().routes());
+    `;
+  }
+  names.forEach((name: string) => {
+    content += `app.use('/api/${toCamelCase(name)}', new ${name}Routes().routes());
+    `;
+  });
+  content += `
     // Middleware to handle all error messages
     app.use(ErrorHandler);
   }
@@ -899,14 +904,16 @@ content += `
   return content;
 }
 
+// User files
+
 export const generateUserInterface = async (): Promise<string> => {
-return `
+  return `
 import { Document } from 'mongoose';
 
 export interface IUser extends Document {
   email: string;
   password: string;
-  tokens: Arraw<{
+  tokens: Array<{
     access: string,
     token: string
   }>;
@@ -934,7 +941,10 @@ export const UserModel: Model<IUser> = model<IUser>('User', userSchema);
 }
 
 export const generateUserSchema = async (): Promise<string> => {
-  return `
+  return `import * as validator from 'validator';
+import * as jwt from 'jsonwebtoken';
+import * as _ from 'lodash';
+import * as bcrypt from 'bcryptjs';
 import { Schema } from 'mongoose';
 
 const _userSchema = new Schema ({
@@ -1015,8 +1025,8 @@ _userSchema.pre('save', function (next) {
   // To do not rehash the value every time we update the doc we should use 'isModified()'.
   if (user.isModified('password')) {
     bcrypt.genSalt(10, (error, salt) => {
-      bcrypt.hash(user.password, salt, (error, hash) => {
-        user.password = hash;
+      bcrypt.hash((<any>user).password, salt, (error, hash) => {
+        (<any>user).password = hash;
         next();
       });
     });
@@ -1067,6 +1077,101 @@ _userSchema.statics.findByCredentials = function (email, password) {
 };
 
 export const userSchema = _userSchema;
+`;
+}
+
+export const generateUserRoutes = async (): Promise<string> => {
+  return `
+import { Router } from 'express';
+import { UserController } from '../controllers/UserController';
+
+const router: Router = Router();
+
+export class UserRoutes {
+
+  public userController: UserController;
+
+  constructor() {
+    this.userController = new UserController();	
+  }
+
+  routes(): Router {
+    const controller = this.userController;
+    router.post('', controller.create.bind(controller));
+    router.get('', controller.read.bind(controller));
+    router.put('/:id', controller.update.bind(controller));
+    router.delete('/:id', controller.delete.bind(controller));
+    router.get('/:id', controller.findById.bind(controller));
+    // Custom user routes
+    router.get('/me', controller.getUser.bind(controller));
+    router.post('/login', controller.login.bind(controller));
+    return router;
+  }
+}  
+`;
+}
+
+export const generateUserController = async (): Promise<string> => {
+  return `import { Request, Response, NextFunction } from 'express';
+import { BaseController } from './base/BaseController';
+import { UserBusiness } from '../businesses/UserBusiness';
+import { IUser } from '../models/interfaces/IUser';
+    
+export class UserController extends BaseController<IUser> {
+  
+  constructor() {
+    super(new UserBusiness());
+  }
+  
+  public async getUser(request: Request, response: Response, next: NextFunction): Promise<void> {
+    
+  }
+
+  public async login(request: Request, response: Response, next: NextFunction): Promise<void> {
+    
+  }
+    
+}
+`;
+}
+
+export const generateUserBusiness = async (): Promise<string> => {
+  return `import { UserRepository } from '../repositories/UserRepository';
+import { IUser } from '../models/interfaces/IUser';
+import { BaseBusiness } from './base/BaseBusiness';
+    
+export class UserBusiness extends BaseBusiness<IUser> {
+  
+  constructor() {
+    super(new UserRepository());
+  }
+
+  public getUser(): Promise<IUser> {
+    throw new Error('Function not implemented');
+    return null;
+  }
+
+  public login(): Promise<IUser> {
+    throw new Error('Function not implemented');
+    return null;
+  }
+    
+}
+`;
+}
+
+export const generateUserRepository = async (): Promise<string> => {
+  return `import { BaseRepository } from './base/BaseRepository';
+import { UserModel } from '../data-access/models/UserModel';
+import { IUser } from '../models/interfaces/IUser';
+
+export class UserRepository extends BaseRepository<IUser> {
+  
+  constructor() {
+    super(UserModel);
+  }
+  
+}
 `;
 }
 
