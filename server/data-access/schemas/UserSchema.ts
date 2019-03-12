@@ -64,6 +64,10 @@ _userSchema.methods.generateAuthToken = function () {
 
 _userSchema.methods.removeToken = function (token) {
   var user = this;
+  /* user.tokens.pull({ tokens: { token } });
+  return user.save().then(() => {
+    return user;
+  }); */
   // Remember that update returns a promise if no then() callback provided.
   return user.update({
     // MongoDB operator '$pull' let us remove items from an array that match certain criterea. 
@@ -95,7 +99,6 @@ _userSchema.pre('save', function (next) {
 });
 
 _userSchema.statics.findByToken = function (token: string) {
-  console.log(chalk.yellow('Finding by token'), token);
   const User = this;
   let decoded;
   try {

@@ -946,8 +946,9 @@ import * as jwt from 'jsonwebtoken';
 import * as _ from 'lodash';
 import * as bcrypt from 'bcryptjs';
 import { Schema } from 'mongoose';
+import chalk from 'chalk';
 
-const _userSchema = new Schema ({
+const _userSchema = new Schema({
   email: {
     type: String,
     required: true,
@@ -968,7 +969,7 @@ const _userSchema = new Schema ({
     access: {
       type: String,
       required: true
-    },  
+    },
     token: {
       type: String,
       required: true
@@ -979,23 +980,24 @@ const _userSchema = new Schema ({
 // Define the INSTANCE METHODS.
 
 // Tell what mongoose should send back when the user model is converted to a json object.
-_userSchema.methods.toJSON = function() {
+_userSchema.methods.toJSON = function () {
   var user = this;
   var userObject = user.toObject();
   return _.pick(userObject, ['_id', 'email']);
 };
 
 _userSchema.methods.generateAuthToken = function () {
-  var user = this;
-  var access = 'auth';
-  var token = jwt.sign({
-    _id: user._id.toHexString(), 
+  const user = this;
+  const access = 'auth';
+  const token = jwt.sign({
+    _id: user._id.toHexString(),
     access
-  }, process.env.JWT_SECRET).toString();
-  user.tokens.push({
+  }, process.env.JWT_HASH).toString();
+  const tokenObject: { access: string, token: string } = {
     access,
     token
-  });
+  }
+  user.tokens.push(tokenObject);
   // Update and save the user object.
   // Return a promise: If there is no error saving, then pass the token to the next .then() call.
   return user.save().then(() => {
@@ -1005,12 +1007,16 @@ _userSchema.methods.generateAuthToken = function () {
 
 _userSchema.methods.removeToken = function (token) {
   var user = this;
+  /* user.tokens.pull({ tokens: { token } });
+  return user.save().then(() => {
+    return user;
+  }); */
   // Remember that update returns a promise if no then() callback provided.
   return user.update({
     // MongoDB operator '$pull' let us remove items from an array that match certain criterea. 
     $pull: {
       // Define what we want to pull.
-      tokens: {token}
+      tokens: { token }
     }
   });
 };
@@ -1021,7 +1027,7 @@ _userSchema.methods.removeToken = function (token) {
 // Visit the documentation to see how 'pre' operates.
 _userSchema.pre('save', function (next) {
   // Get acces to the individual document.
-  var user = this;
+  const user = this;
   // To do not rehash the value every time we update the doc we should use 'isModified()'.
   if (user.isModified('password')) {
     bcrypt.genSalt(10, (error, salt) => {
@@ -1035,11 +1041,11 @@ _userSchema.pre('save', function (next) {
   }
 });
 
-_userSchema.statics.findByToken = function (token) {
-  var User = this;
-  var decoded;
+_userSchema.statics.findByToken = function (token: string) {
+  const User = this;
+  let decoded;
   try {
-    decoded = jwt.verify(token, process.env.JWT_SECRET);
+    decoded = jwt.verify(token, process.env.JWT_HASH);
   } catch (e) {
     return new Promise((resolve, reject) => {
       reject();
@@ -1057,9 +1063,9 @@ _userSchema.statics.findByToken = function (token) {
   });
 };
 
-_userSchema.statics.findByCredentials = function (email, password) {
-  var User = this;
-  return User.findOne({email}).then((user) => {
+_userSchema.statics.findByCredentials = function (email: string, password: string) {
+  const User = this;
+  return User.findOne({ email }).then((user) => {
     if (!user) {
       return Promise.reject();
     }
@@ -1081,9 +1087,9 @@ export const userSchema = _userSchema;
 }
 
 export const generateUserRoutes = async (): Promise<string> => {
-  return `
-import { Router } from 'express';
+  return `import { Router } from 'express';
 import { UserController } from '../controllers/UserController';
+import { authenticate } from './middlewares/authenticate';
 
 const router: Router = Router();
 
@@ -1092,19 +1098,21 @@ export class UserRoutes {
   public userController: UserController;
 
   constructor() {
-    this.userController = new UserController();	
+    this.userController = new UserController();
   }
 
   routes(): Router {
     const controller = this.userController;
+    // Custom user routes
     router.post('', controller.create.bind(controller));
+    router.get('/me', authenticate, controller.me.bind(controller));
+    router.post('/login', controller.login.bind(controller));
+    router.delete('/logout', authenticate, controller.logout.bind(controller));
+    // Generic routes
     router.get('', controller.read.bind(controller));
     router.put('/:id', controller.update.bind(controller));
     router.delete('/:id', controller.delete.bind(controller));
     router.get('/:id', controller.findById.bind(controller));
-    // Custom user routes
-    router.get('/me', controller.getUser.bind(controller));
-    router.post('/login', controller.login.bind(controller));
     return router;
   }
 }  
@@ -1116,21 +1124,58 @@ export const generateUserController = async (): Promise<string> => {
 import { BaseController } from './base/BaseController';
 import { UserBusiness } from '../businesses/UserBusiness';
 import { IUser } from '../models/interfaces/IUser';
-    
+import { handleError } from './helps/handle-error';
+import chalk from 'chalk';
+
 export class UserController extends BaseController<IUser> {
-  
+
   constructor() {
     super(new UserBusiness());
   }
-  
-  public async getUser(request: Request, response: Response, next: NextFunction): Promise<void> {
-    
+
+  public async create(request: Request, response: Response, next: NextFunction): Promise<void> {
+    try {
+      const user: IUser = <IUser>request.body;
+      const result: { user: IUser, token: string } = await this._business.createUser(user);
+      response.status(201).header('x-auth', result.token).json({ item: result.user });
+    } catch (error) {
+      handleError(error, 'Error creating user', next);
+      response.status(500).json({ message: error });
+    }
+  }
+
+  public async me(request: Request, response: Response, next: NextFunction): Promise<void> {
+    try {
+      response.status(200).json(request['user']);
+    } catch (error) {
+      handleError(error, 'Error getting user data', next);
+      response.status(500).json({ message: error });
+    }
   }
 
   public async login(request: Request, response: Response, next: NextFunction): Promise<void> {
-    
+    try {
+      const credentials: { email: string, passwrod: string } = request.body;
+      const result: { user: IUser, token: string } = await this._business.login(credentials);
+      response.status(200).header('x-auth', result.token).json({ item: result.user });
+    } catch (error) {
+      handleError(error, 'Error loging in', next);
+      response.status(500).json({ message: error });
+    }
   }
-    
+
+  public async logout(request: Request, response: Response, next: NextFunction): Promise<void> {
+    try {
+      const user: string = request['user'];
+      const token: string = request['token'];
+      await this._business.logout(user, token);
+      response.status(200).send();
+    } catch (error) {
+      handleError(error, 'Error deleting user', next);
+      response.status(500).json({ message: error });
+    }
+  }
+
 }
 `;
 }
@@ -1139,11 +1184,26 @@ export const generateUserBusiness = async (): Promise<string> => {
   return `import { UserRepository } from '../repositories/UserRepository';
 import { IUser } from '../models/interfaces/IUser';
 import { BaseBusiness } from './base/BaseBusiness';
-    
+import chalk from 'chalk';
+
 export class UserBusiness extends BaseBusiness<IUser> {
-  
+
   constructor() {
     super(new UserRepository());
+  }
+
+  public async createUser(user: IUser): Promise<{ user: IUser, token: string }> {
+    const result = await this._repository.createUser(user);
+    return result;
+  }
+
+  public async login(credentials: { email: string, password: string }): Promise<{ user: IUser, token: string }> {
+    const result = await this._repository.login(credentials);
+    return result;
+  }
+
+  public async logout(user: IUser, token: string): Promise<void> {
+    return await this._repository.logout(user, token);
   }
 
   public getUser(): Promise<IUser> {
@@ -1151,11 +1211,6 @@ export class UserBusiness extends BaseBusiness<IUser> {
     return null;
   }
 
-  public login(): Promise<IUser> {
-    throw new Error('Function not implemented');
-    return null;
-  }
-    
 }
 `;
 }
@@ -1164,35 +1219,56 @@ export const generateUserRepository = async (): Promise<string> => {
   return `import { BaseRepository } from './base/BaseRepository';
 import { UserModel } from '../data-access/models/UserModel';
 import { IUser } from '../models/interfaces/IUser';
+import chalk from 'chalk';
 
 export class UserRepository extends BaseRepository<IUser> {
-  
+
   constructor() {
     super(UserModel);
   }
-  
+
+  public async createUser(user: IUser): Promise<{ user: IUser, token: string }> {
+    const createdUser: IUser = <IUser>await this._model.create(user);
+    const token: string = <string>await createdUser.generateAuthToken();
+    return { user: createdUser, token };
+  }
+
+  public async login(credentials: { email: string, password: string }): Promise<{ user: IUser, token: string }> {
+    const user: IUser = await (<any>this._model).findByCredentials(credentials.email, credentials.password);
+    const token: string = <string>await user.generateAuthToken();
+    return { user, token };
+  }
+
+  public async logout(user: IUser, token: string): Promise<void> {
+    await user.removeToken(token);
+  }
+
 }
 `;
 }
 
 export const generateAthenticateMiddleware = async (): Promise<string> => {
-  return `
+  return `import { Request, Response, NextFunction } from 'express';
 import { UserModel } from './../../data-access/models/UserModel';
 
-export const authenticate = (request, response, next) => {
+export const authenticate = (request: Request, response: Response, next: NextFunction) => {
   const token: string = request.header('x-auth');
-
+  if (token === undefined) {
+    console.log('x-auth request header is undefined');
+    response.status(401).send();
+  }
   // findByToken returns a promise so we call .then() to
-  UserModel.findByToken(token).then((user) => {
+  (<any>UserModel).findByToken(token).then((user) => {
     // If there is no user whose token is the one provided, then return a rejected promise so the catch below get executed.
     if (!user) {
       return Promise.reject();
     }
     // If the user is found, then manipulate the resquest object and continue with the chain of promises.
-    request.user = user;
-    request.token = token;
+    request['user'] = user;
+    request['token'] = token;
     next();
   }).catch((e) => {
+    console.log('Error finding user by token', e);
     response.status(401).send();
   });
 };

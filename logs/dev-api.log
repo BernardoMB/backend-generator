@@ -195,3 +195,214 @@ timestamp=2019-03-12T01:35:25.266Z level=info application=my-generated-app corre
 
 timestamp=2019-03-12T01:35:42.752Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST
 
+timestamp=2019-03-12T01:35:42.815Z level=error application=my-generated-app correlationId=undefined remote-addr=::1 url=/api/user method=POST status=500 error="Error creating user: E11000 duplicate key error collection: my-generated-app.users index: email_1 dup key: { : "bmondragonbrozon@gmail.com" }"
+timestamp=2019-03-12T01:35:42.817Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user method=POST status=500 responseTime=64
+
+timestamp=2019-03-12T01:41:06.229Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T01:41:06.237Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=401 responseTime=7
+
+timestamp=2019-03-12T01:41:31.111Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T01:41:31.116Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=200 responseTime=3
+
+timestamp=2019-03-12T01:41:32.202Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T01:41:32.206Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=200 responseTime=3
+
+timestamp=2019-03-12T01:41:32.742Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T01:41:32.745Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=200 responseTime=2
+
+timestamp=2019-03-12T01:41:32.906Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T01:41:32.909Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=200 responseTime=2
+
+timestamp=2019-03-12T01:41:33.080Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T01:41:33.084Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=200 responseTime=2
+
+timestamp=2019-03-12T01:41:33.229Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T01:41:33.232Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=200 responseTime=2
+
+timestamp=2019-03-12T01:41:33.412Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T01:41:33.415Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=200 responseTime=2
+
+timestamp=2019-03-12T01:42:06.813Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/login method=POST
+
+timestamp=2019-03-12T01:42:06.878Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/login method=POST status=200 responseTime=65
+
+timestamp=2019-03-12T01:42:50.568Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T01:42:50.571Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=200 responseTime=2
+
+timestamp=2019-03-12T01:42:51.335Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T01:42:51.338Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=200 responseTime=2
+
+timestamp=2019-03-12T01:42:51.722Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T01:42:51.725Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=200 responseTime=2
+
+timestamp=2019-03-12T01:42:51.898Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T01:42:51.901Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=200 responseTime=2
+
+timestamp=2019-03-12T01:42:52.077Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T01:42:52.081Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=200 responseTime=3
+
+timestamp=2019-03-12T01:42:52.236Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T01:42:52.238Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=200 responseTime=2
+
+timestamp=2019-03-12T01:43:57.411Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T01:43:57.414Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=200 responseTime=3
+
+timestamp=2019-03-12T01:43:58.328Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T01:43:58.331Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=200 responseTime=2
+
+timestamp=2019-03-12T01:44:24.049Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:46:24.053Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=- responseTime=-
+
+timestamp=2019-03-12T01:50:28.087Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:50:28.107Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=15
+
+timestamp=2019-03-12T01:50:40.769Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:50:40.772Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=2
+
+timestamp=2019-03-12T01:50:41.391Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:50:41.394Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=2
+
+timestamp=2019-03-12T01:50:41.567Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:50:41.570Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=2
+
+timestamp=2019-03-12T01:50:41.761Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:50:41.764Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=2
+
+timestamp=2019-03-12T01:50:41.895Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:50:41.898Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=2
+
+timestamp=2019-03-12T01:50:42.108Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:50:42.111Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=2
+
+timestamp=2019-03-12T01:50:42.284Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:50:42.288Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=3
+
+timestamp=2019-03-12T01:50:44.075Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:50:44.078Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=2
+
+timestamp=2019-03-12T01:50:44.759Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:50:44.762Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=2
+
+timestamp=2019-03-12T01:50:45.157Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:50:45.160Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=2
+
+timestamp=2019-03-12T01:50:45.668Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:50:45.672Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=2
+
+timestamp=2019-03-12T01:50:57.104Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET
+
+timestamp=2019-03-12T01:50:57.109Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/me method=GET status=200 responseTime=4
+
+timestamp=2019-03-12T01:51:00.177Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/login method=POST
+
+timestamp=2019-03-12T01:51:00.267Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/login method=POST status=200 responseTime=89
+
+timestamp=2019-03-12T01:51:02.989Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:51:02.992Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=3
+
+timestamp=2019-03-12T01:51:03.514Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:51:03.516Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=2
+
+timestamp=2019-03-12T01:51:03.695Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:51:03.697Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=2
+
+timestamp=2019-03-12T01:51:03.878Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:51:03.881Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=2
+
+timestamp=2019-03-12T01:51:04.078Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:51:04.081Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=2
+
+timestamp=2019-03-12T01:51:04.256Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:51:04.259Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=2
+
+timestamp=2019-03-12T01:51:05.086Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:51:05.089Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=2
+
+timestamp=2019-03-12T01:51:05.281Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:51:05.283Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=2
+
+timestamp=2019-03-12T01:51:05.457Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:51:05.460Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=2
+
+timestamp=2019-03-12T01:51:05.630Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:51:05.633Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=2
+
+timestamp=2019-03-12T01:51:05.857Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:51:05.860Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=2
+
+timestamp=2019-03-12T01:53:41.523Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:53:41.526Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=2
+
+timestamp=2019-03-12T01:53:52.193Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:53:52.195Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=401 responseTime=1
+
+timestamp=2019-03-12T01:53:58.024Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T01:53:58.027Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=2
+
+timestamp=2019-03-12T01:59:42.477Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/login method=POST
+
+timestamp=2019-03-12T01:59:42.583Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/login method=POST status=200 responseTime=102
+
+timestamp=2019-03-12T02:02:06.666Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T02:02:06.672Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=5
+
+timestamp=2019-03-12T02:32:40.468Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T02:32:40.490Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=18
+
+timestamp=2019-03-12T02:34:47.764Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T02:34:47.785Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=17
+
+timestamp=2019-03-12T02:41:21.217Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T02:41:21.237Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=16
+
+timestamp=2019-03-12T02:45:19.061Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE
+
+timestamp=2019-03-12T02:45:19.082Z level=info application=my-generated-app correlationId=- remote-addr=::1 url=/api/user/logout method=DELETE status=200 responseTime=18
+

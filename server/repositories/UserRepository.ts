@@ -22,7 +22,7 @@ export class UserRepository extends BaseRepository<IUser> {
   }
 
   public async logout(user: IUser, token: string): Promise<void> {
-    user.removeToken(token);
+    await user.removeToken(token);
   }
 
 }

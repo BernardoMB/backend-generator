@@ -47,7 +47,7 @@ export class UserController extends BaseController<IUser> {
       const user: string = request['user'];
       const token: string = request['token'];
       await this._business.logout(user, token);
-      response.status(200);
+      response.status(200).send();
     } catch (error) {
       handleError(error, 'Error deleting user', next);
       response.status(500).json({ message: error });
