@@ -34,3 +34,19 @@ or
 ```bash
 $ npm run generated-server-watch
 ```
+
+Test all endpoints
+```bash
+$ npm test
+```
+
+# Testing
+
+The generated code is tested using the popular npm library Jest.
+
+Test the application using Jest:
+```bash
+$ npm run test
+```
+
+See the folowing link to use Jest inside a typescript project: <https://github.com/basarat/typescript-book/blob/master/docs/testing/jest.md>

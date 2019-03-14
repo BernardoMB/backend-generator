@@ -904,8 +904,6 @@ export class Api {
   return content;
 }
 
-// User files
-
 export const generateUserInterface = async (): Promise<string> => {
   return `
 import { Document } from 'mongoose';
@@ -1246,6 +1244,8 @@ export class UserRepository extends BaseRepository<IUser> {
 }
 `;
 }
+
+
 
 export const generateAthenticateMiddleware = async (): Promise<string> => {
   return `import { Request, Response, NextFunction } from 'express';

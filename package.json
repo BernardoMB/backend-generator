@@ -4,14 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "generate": "ts-node src/main.ts",
     "clean": "rd /s /q server",
     "regenerate": "concurrently \"npm run clean\" \"npm run generate\"",
-    "test-server": "ts-node ./test-server/server.ts",
-    "test-server-watch": "nodemon --ext \".ts\" --exec \"npm run test-server\"",
-    "generated-server": "ts-node server/server.ts",
-    "generated-server-watch": "nodemon --ext \".ts\" --exec \"npm run generated-server\""
+    "server": "ts-node server/server.ts",
+    "server-watch": "nodemon --ext \".ts\" --exec \"npm run server\"",
+    "test": "jest --forceExit --detectOpenHandles",
+    "test-watch": "npx jest --watch"
   },
   "repository": {
     "type": "git",
@@ -23,19 +22,25 @@
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/express": "^4.16.1",
+    "@types/filesystem": "0.0.29",
     "@types/helmet": "0.0.43",
+    "@types/jest": "^24.0.11",
     "@types/jsonwebtoken": "^8.3.2",
     "@types/lodash": "^4.14.122",
     "@types/mongoose": "^5.3.20",
     "@types/morgan": "^1.7.35",
+    "@types/node": "^11.11.3",
     "@types/validator": "^10.9.0",
     "concurrently": "^4.1.0",
+    "jest": "^24.5.0",
+    "mocha": "^6.0.2",
+    "supertest": "^4.0.0",
+    "ts-jest": "^24.0.0",
     "ts-node": "^8.0.2",
-    "typescript": "^3.3.3333"
+    "typescript": "^3.3.3333",
+    "winston": "^3.2.1"
   },
   "dependencies": {
-    "@types/filesystem": "0.0.29",
-    "@types/node": "^11.9.5",
     "bcryptjs": "^2.4.3",
     "chalk": "^2.4.2",
     "dotenv-flow": "^0.2.0",
@@ -46,7 +51,6 @@
     "mkdirp": "^0.5.1",
     "mongoose": "^5.4.16",
     "morgan": "^1.9.1",
-    "validator": "^10.11.0",
-    "winston": "^3.2.1"
+    "validator": "^10.11.0"
   }
 }
